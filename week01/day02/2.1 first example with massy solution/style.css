@@ -1,0 +1,65 @@
+img {
+    height: 50px;
+    align: left;
+    background: #333333;
+    padding: 5px 5px 10px 10%;
+    margin: 0px;
+}
+
+#first {
+    background-color: #333333;
+    padding: 24px 15px 24px 800px;
+    margin: 0px;
+    vertical-align: middle;
+    position: relative;
+    bottom: 28px;
+    right: 5px;
+}
+
+#last {
+    background-color: #333333;
+    padding: 24px 100% 24px 15px;
+    margin: 0px;
+    vertical-align: middle;
+    position: relative;
+    bottom: 28px;
+    right: 5px;
+}
+
+a {
+    background-color: #333333;
+    padding: 24px 15px;
+    margin: 0px;
+    vertical-align: middle;
+    position: relative;
+    bottom: 28px;
+    right: 5px;
+    color: #ff0099;
+}
+
+h1, h2, h3, p {
+    margin: 0px;
+    padding: 5px 5px 5px 10%;
+}
+
+h1 {
+    font-weight: bold;
+    font-family: 'Lora', serif;
+}
+
+h3 {
+    color: #ff0099;
+}
+
+p {
+    font-family: 'consolas', courier;
+    margin-top: 20px;
+}
+
+/*h2 {
+    color: #ff0099;
+}*/
+
+body {
+    background-image: url(pics/topography/topography.png)
+}
