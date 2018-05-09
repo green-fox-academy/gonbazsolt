@@ -20,3 +20,6 @@ how to put links into readme file
 
 GITHUB Usage
 (https://github.com/green-fox-academy/definitions/blob/master/github-usage.md)
+
+another repo was made on 9th May:
+https://github.com/gonbazsolt/gonbazsolt.github.io
