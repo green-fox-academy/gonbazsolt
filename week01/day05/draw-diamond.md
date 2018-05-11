@@ -1,5 +1,5 @@
-unfortunetly github changes the preview of the original text file
-in the first 3 section (stars and row/column indexes) the picture would look like a matrix
+Unfortunetly github changes the preview of the original text file.
+In the first 3 section (stars and row/column indexes) the picture would look like a matrix.
 
 012345678
 1   **
