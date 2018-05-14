@@ -1,3 +1,5 @@
+'use strict';
+
 let baseNum: number = 123;
 
 function doubling(arg1: number) {
