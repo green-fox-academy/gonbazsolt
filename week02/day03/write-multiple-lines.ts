@@ -9,9 +9,11 @@ declare function require(path: string): any;
 const fs = require('fs');
 
 function writeContentToFile(pa: string, co: string, nu: number) {
-  let content = co.concat('\n');
-  for (let i = 1; i < nu; i++) {
-    content = content.concat(co).concat('\n');
+  let content: string = '';
+  co = co.concat('\r\n');
+  
+  for (let i = 0; i < nu; i++) {
+    content = content.concat(co);
   }
   fs.writeFileSync(pa,content);
   console.log(`a new text file was created with this content: ${nu} lines of string '${wordToWriteOut}'`);
