@@ -1,6 +1,6 @@
 'use strict';
 
-class Animal {
+export class Animal {
   hunger: number = 50;
   thirst: number = 50;
 
