@@ -1,6 +1,6 @@
 'use strict';
 
-abstract class Animal {
+export abstract class Animal {
   name: string;
   age: number;
   private tribe: string;
