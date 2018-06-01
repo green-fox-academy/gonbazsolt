@@ -1,3 +1,6 @@
+My to-do app repo:
+https://github.com/gonbazsolt/todo-app
+
 You can find the main syllabus here:
 (https://github.com/green-fox-academy/secret-syllabus/wiki)
 
