@@ -43,6 +43,22 @@ function drawKochLine(centX: number, centY: number, lineLength: number, relative
   ctx.lineTo(centX + modX, centY + modY);
   ctx.stroke();
   ctx.closePath();
+
+  //erase black line between point 2 & 4
+  ctx.beginPath();
+  ctx.strokeStyle = 'white';
+  ctx.lineWidth = 2;
+  modX = 0.5 * lineLength * Math.cos(convertDegToRad(relativeAngle));
+  modY = 0.5 * lineLength * Math.sin(convertDegToRad(relativeAngle));
+  ctx.moveTo(centX - modX, centY - modY);
+
+  modX = 0.5 * lineLength * Math.cos(convertDegToRad(relativeAngle));
+  modY = 0.5 * lineLength * Math.sin(convertDegToRad(relativeAngle));
+  ctx.lineTo(centX + modX, centY + modY);
+  ctx.stroke();
+  ctx.closePath();
+  ctx.strokeStyle = 'black';
+  ctx.lineWidth = 1;
 }
 
 function recursiveKochLines(centerX: number, centerY: number, recLineLength: number, recRelativeAngle: number): void {
@@ -109,5 +125,6 @@ function drawTriangle(centerX: number, centerY: number, outerRadius: number) {
   }
 }
 
+ctx.lineWidth = 1;
 ctx.strokeStyle = 'black';
 drawTriangle(300, 300, 290);
