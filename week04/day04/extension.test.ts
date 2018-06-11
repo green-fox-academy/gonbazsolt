@@ -28,6 +28,16 @@ test('max of three: third', function (t: any): any {
   t.end();
 });
 
+test('max of three: first', function (t: any): any {
+  t.equal(maxOfThree(5, 4, 3), 5);
+  t.end();
+});
+
+test('max of three: third', function (t: any): any {
+  t.equal(maxOfThree(3, 5, 4), 5);
+  t.end();
+});
+
 test('median: four', function (t: any): any {
   t.equal(median([7, 5, 3, 5]), 5);
   t.end();
