@@ -92,3 +92,8 @@ test('translate: lagopus', function (t: any): any {
   t.equal(translate('lagopus'), 'lavagovopuvus');
   t.end();
 });
+
+test('translate: leesik', function (t: any): any {
+  t.equal(translate('leesik'), 'leveevesivik');
+  t.end();
+});
