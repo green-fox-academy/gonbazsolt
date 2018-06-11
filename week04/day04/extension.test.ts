@@ -33,8 +33,18 @@ test('max of three: first', function (t: any): any {
   t.end();
 });
 
-test('max of three: third', function (t: any): any {
+test('max of three: second', function (t: any): any {
   t.equal(maxOfThree(3, 5, 4), 5);
+  t.end();
+});
+
+test('max of three: second and 2 of max numbers are the same', function (t: any): any {
+  t.equal(maxOfThree(3, 5, 5), 5);
+  t.end();
+});
+
+test('max of three: second and 2 of non max numbers are the same', function (t: any): any {
+  t.equal(maxOfThree(3, 5, 3), 5);
   t.end();
 });
 
