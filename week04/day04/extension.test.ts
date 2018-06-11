@@ -13,6 +13,11 @@ test('add: 1 and 4 is 5', function (t: any): any {
   t.end();
 });
 
+test('add: 2 and 6 is 8', function (t: any): any {
+  t.equal(add(2, 6), 8);
+  t.end();
+});
+
 test('max of three: first', function (t: any): any {
   t.equal(maxOfThree(5, 4, 3), 5);
   t.end();
