@@ -1,7 +1,7 @@
 'use strict';
 
 export function add(a: number, b: number): number {
-  return 5;
+  return a + b;
 }
 
 export function maxOfThree(a: number, b: number, c: number): number {
