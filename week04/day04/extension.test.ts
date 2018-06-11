@@ -58,6 +58,11 @@ test('median: five', function (t: any): any {
   t.end();
 });
 
+test('median: four element [7, 5, 3, 4]', function (t: any): any {
+  t.equal(median([7, 5, 3, 4]), 4.5);
+  t.end();
+});
+
 test('is vowel: a', function (t: any): any {
   t.ok(isVowel('a'));
   t.end();
