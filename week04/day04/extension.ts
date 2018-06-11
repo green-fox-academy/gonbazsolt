@@ -31,13 +31,13 @@ export function isVowel(c: string): boolean {
   if 
 */
 export function translate(hungarian: string): string {
-  let teve = hungarian;
-  let length = teve.length;
+  let teve: string = hungarian;
+  let length: number = teve.length;
   let str1: string;
   let str2: string;
 
   for (let i = 0; i < length; i++) {
-    let c = teve[i];
+    let c: string = teve[i];
     
     if (isVowel(c)) {
       str1 = teve.slice(0, i);
