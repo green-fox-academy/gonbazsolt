@@ -78,6 +78,11 @@ test('is viwel: u', function (t: any): any {
   t.end();
 });
 
+test('is viwel: A', function (t: any): any {
+  t.ok(isVowel('A'));
+  t.end();
+});
+
 test('translate: bemutatkozik', function (t: any): any {
   t.equal(translate('bemutatkozik'), 'bevemuvutavatkovozivik');
   t.end();
