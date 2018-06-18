@@ -11,7 +11,7 @@ body {
 .basic {
   display: flex;
   flex-direction: column;
-  width: 90%;
+  width: 1214px;
   height: 100%;
   margin: 10px;
 }
@@ -29,12 +29,12 @@ body {
 
 .left-sidebar {
   background-color: orange;
-  flex: 1;
+  min-width: 180px;
 }
 
 .main-content {
   background-color: red;
-  flex: 3;
+  min-width: 814px;
   display: flex;
   justify-content: flex-end;
   align-items: flex-end;
@@ -50,7 +50,7 @@ body {
 
 .right-sidebar {
   background-color: purple;
-  flex: 1;
+  min-width: 180px;
 }
 
 .footer {
