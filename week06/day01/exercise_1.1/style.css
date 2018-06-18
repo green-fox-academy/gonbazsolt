@@ -1,0 +1,23 @@
+.container {
+  display: flex;
+  /*align-items: center;
+  justify-content: space-around;*/
+}
+
+.item {
+  align-self: flex-end;
+  height: 200px;
+  width: 200px;
+}
+
+.green {
+  background-color: #4DD101;
+}
+
+.yellow {
+  background-color: #F3D126;
+}
+
+.purple {
+  background-color: #A354FD;
+}
