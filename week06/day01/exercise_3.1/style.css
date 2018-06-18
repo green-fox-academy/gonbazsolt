@@ -1,0 +1,17 @@
+.container {
+  display: flex;
+  background-color: #F3D126;
+  justify-content: flex-start;
+  align-items: center;
+  height: 450px;
+  width: 100%;
+  list-style-type: none;
+  padding: 0;
+}
+
+.item {
+  height: 150px;
+  flex-basis: 150px;
+  margin-right: 20px;
+  background-color: #A354FD;
+}
