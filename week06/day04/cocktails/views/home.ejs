@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Cocktails</title>
+    <link rel="stylesheet" type="text/css" href="/static/style.css">
+  </head>
+  <body>
+    <h1>Cocktails</h1>
+    <a href='http://localhost:3000'>ALL</a>
+
+    <% alcoholList.forEach( item => { %>
+      
+      <%- `<a href='http://localhost:3000/?alcohol=` + item + `'>` %>
+        <%= item.toUpperCase() %>
+      </a>
+
+      <!-- It's another, nicer solution:
+        <a href="http://localhost:3000/?alcohol=<%= item %>">
+          <%= item.toUpperCase() %>
+        </a>                                                      -->
+    <% }); %>
+
+    <br><br>
+
+    <table>
+      <col>
+      <col class='second'>
+      <thead>
+        <tr>
+          <th>Name</th>
+          <th>Price</th>
+        </tr>
+      </thead>
+      <tbody>
+        <% arrayOfCocktailObjects.forEach( item => { %>
+          <tr>
+            <td>
+              <strong><%= item.name %></strong>
+              <%= item.isAlcoholic ? '' : '(non-alcoholic)' %>
+              <br>
+              <%= item.contains %>
+            </td>
+            <td class='price'>
+              <strong><%= item.price %> Ft</strong>
+            </td>
+          </tr>
+        <% }); %>
+      </tbody>
+    </table>
+  </body>
+</html>
