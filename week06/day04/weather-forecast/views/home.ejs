@@ -1,0 +1,40 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Weather forecast</title>
+  <link rel="stylesheet" type="text/css" href="/static/style_home.css">
+  <link href="https://fonts.googleapis.com/css?family=Lato:400,900" rel="stylesheet">
+</head>
+
+<body class="screen">
+  <div class="container">
+
+    <% for (let i = 0; i < forecasts.length; i++) { %>
+      <a href="http://localhost:3000/cities/<%= forecasts[i].city %>">
+        <section>
+          <div class="location">
+            <h1 class="city">
+              <%= forecasts[i].city %>
+            </h1>
+            <h4 class="state">
+              <%= forecasts[i].location %>
+            </h4>
+          </div>
+          <div class="temp">
+            <p>
+              <%= forecasts[i].weather[0].temp %> &#176;C
+            </p>
+          </div>
+          <div class="icon">
+            <img src="/static/<%= forecasts[i].weather[0].icon %>.png" alt="icon">
+          </div>
+        </section>
+        <% } %>
+      </a>
+
+  </div>
+</body>
+
+</html>

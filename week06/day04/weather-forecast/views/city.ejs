@@ -1,0 +1,85 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <title>Weather forecast</title>
+  <link rel="stylesheet" type="text/css" href="/static/style_city.css">
+  <link href="https://fonts.googleapis.com/css?family=Lato:400,900" rel="stylesheet">
+</head>
+
+<body class="screen">
+  <div class="container">
+    <div class="top">
+      <div class="city">
+        <h1>
+          <%= forecast.city %>
+        </h1>
+      </div>
+      <div class="prev_city">
+        <a href="http://localhost:3000/cities/<%= prevCity %>">
+          <div class="sides">
+            <img class="button" src="/static/arrow-up.png">
+          </div>
+          <div class="middle">
+            <h1>
+              Previous
+            </h1>
+          </div>
+          <div class="sides">
+            <img class="button" src="/static/arrow-up.png">
+          </div>
+        </a>
+      </div>
+      <div class="home">
+        <h1>
+          <a href="http://localhost:3000/">
+            Home
+          </a>
+        </h1>
+      </div>
+    </div>
+    <div class="days">
+      <% for (let i = 0; i < forecast.weather.length; i++) { %>
+        <section>
+          <div class="icon">
+            <img src="/static/<%= forecast.weather[i].icon %>.png" alt="icon">
+          </div>
+          <div class="temp">
+            <p>
+              <%= forecast.weather[i].temp %> &#176;C
+            </p>
+          </div>
+          <div class="message">
+            <h4>
+              <%= forecast.weather[i].message %>
+            </h4>
+          </div>
+        </section>
+        <% } %>
+    </div>
+    <div class="bottom">
+      <div class="empty"></div>
+      <div class="next_city">
+        <a href="http://localhost:3000/cities/<%= nextCity %>">
+          <div class="sides">
+            <img class="button" src="/static/arrow-down.png">
+          </div>
+          <div class="middle">
+            <h1>
+              Next
+            </h1>
+          </div>
+          <div class="sides">
+            <img class="button" src="/static/arrow-down.png">
+          </div>
+        </a>
+      </div>
+      <div class="empty"></div>
+    </div>
+
+
+  </div>
+</body>
+
+</html>
