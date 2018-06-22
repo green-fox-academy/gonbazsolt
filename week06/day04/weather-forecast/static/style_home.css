@@ -29,6 +29,10 @@ a {
   font-family: 'Lato';
 }
 
+a:hover {
+  color: #1C6C9D;
+}
+
 section {
   flex: 1;
   display: flex;

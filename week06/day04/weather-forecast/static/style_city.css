@@ -55,6 +55,10 @@ a {
   font-family: 'Lato';
 }
 
+a:hover {
+  color: #1C6C9D;
+}
+
 .prev_city {
   flex: 1.5;
   display: flex;
