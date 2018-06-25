@@ -53,4 +53,20 @@ app.get('/greeter/', (req, res) => {
   res.json(message);
 });
 
+app.get('/appenda/:appendable', (req, res) => {
+  let answer = {};
+
+  if (req.params.appendable !== undefined) {
+    answer = {
+      "appended": req.params.appendable.concat('a')
+    }
+  }
+
+  res.json(answer);
+});
+
+app.get('/appenda/', (req, res) => {
+  res.status(404).send('Please provide a word!');
+});
+
 module.exports = app;
