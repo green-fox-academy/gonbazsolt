@@ -36,19 +36,19 @@ app.get('/greeter/', (req, res) => {
     message = {
         "welcome_message": `Oh, hi there ${req.query.name}, my dear ${req.query.title}!`
       };
-  } else if (req.query.name === undefined) {
-    message = {
+    } else if (req.query.name === undefined && req.query.title === undefined) {
+      message = {
+        "error": "Please provide both a name and a title!"
+      };
+    } else if (req.query.name === undefined) {
+      message = {
         "error": "Please provide a name!"
       };
-  } else if (req.query.title === undefined) {
-    message = {
+    } else {
+      message = {
         "error": "Please provide a title!"
       };
-  } else {
-    message = {
-      "error": "Please provide both a name and a title!"
-    };
-  }
+    }
 
   res.json(message);
 });
@@ -71,23 +71,30 @@ app.get('/appenda/', (req, res) => {
 
 app.post('/dountil/:what', (req, res) => {
   let answer = {};
-  let untilNumber = req.body.until + 1;
   let numberResult = 0;
 
-  if (req.params.what !== undefined) {
-    if (req.params.what === 'sum') {
-      for (let i = 0; i < untilNumber; i++) {
-        numberResult += i;
-      }
-    }
-    if (req.params.what === 'factor') {
-      numberResult = 1;
-      for (let i = 1; i < untilNumber; i++) {
-        numberResult *= i;
-      }
-    }
+  if (req.body.until === undefined) {
     answer = {
-      "result": numberResult
+      "error": "Please provide a number!"
+    }
+  } else {
+    let untilNumber = req.body.until + 1;
+    
+    if (req.params.what !== undefined) {
+      if (req.params.what === 'sum') {
+        for (let i = 0; i < untilNumber; i++) {
+          numberResult += i;
+        }
+      }
+      if (req.params.what === 'factor') {
+        numberResult = 1;
+        for (let i = 1; i < untilNumber; i++) {
+          numberResult *= i;
+        }
+      }
+      answer = {
+        "result": numberResult
+      }
     }
   }
 
