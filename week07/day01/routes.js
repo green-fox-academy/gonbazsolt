@@ -136,7 +136,7 @@ app.post('/arrays/', (req, res) => {
 });
 
 app.post('/sith/', (req, res) => {
-  let answer = '';
+  let answer = {};
   
   if (typeof req.body.text === 'string' && req.body.text !== '') {
     let words = req.body.text.split(' ');
@@ -185,6 +185,85 @@ app.post('/sith/', (req, res) => {
   } else {
     answer = {
       'error': 'Feed me some text you have to, padawan young you are. Hmmm.'
+    }
+  }
+
+  res.json(answer);
+});
+
+app.post('/translate/', (req, res) => {
+  let answer = {};
+
+  if (typeof req.body.text === 'string' && req.body.text !== '') {
+    if (req.body.lang === 'hu') {
+      let teve = req.body.text;
+      let length = teve.length;
+      let str1;
+      let str2;
+
+      for (let i = 0; i < length; i++) {
+        let c = teve[i];
+        
+        if (['a', 'á', 'é', 'í', 'ú', 'u', 'ü', 'ű', 'ó', 'ö', 'ő', 'o', 'e', 'i'].indexOf(c.toLowerCase()) !== -1) {
+          str1 = teve.slice(0, i);
+          str2 = teve.slice(i, length);
+          teve = str1 + c + 'v' + str2.slice(0, 1).toLowerCase() + str2.slice(1, str2.length);
+          i += 2;
+          length += 2;
+        }
+      }
+      answer = {
+        'translated': teve,
+        'lang': 'teve'
+      }
+    } else if (req.body.lang === 'en') {
+      let gibberish = req.body.text;
+      let length = gibberish.length;
+      let str1;
+      let str2;
+      let vowels = ['a', 'u', 'o', 'e', 'i'];
+
+      for (let i = 0; i < length; i++) {
+        let c = gibberish[i];
+        
+        if (vowels.indexOf(c.toLowerCase()) !== -1 && i < length - 1 && vowels.indexOf(gibberish[i + 1].toLowerCase()) !== -1) {
+          str1 = gibberish.slice(0, i);
+          str2 = gibberish.slice(i, length);
+          if (i === 0) {
+            gibberish = str1 + 'Idig' + str2.slice(0, 1).toLowerCase() + str2.slice(1, str2.length);  
+          } else if (i > 1 && gibberish[i - 2] === '.') {
+            gibberish = str1 + 'Idig' + str2.slice(0, 1).toLowerCase() + str2.slice(1, str2.length);
+          } else {
+            gibberish = str1 + 'idig' + str2.slice(0, 1).toLowerCase() + str2.slice(1, str2.length);
+          }
+          i += 5;
+          length += 4;
+        } else if (vowels.indexOf(c.toLowerCase()) !== -1) {
+          str1 = gibberish.slice(0, i);
+          str2 = gibberish.slice(i, length);
+          if (i === 0) {
+            gibberish = str1 + 'Idig' + str2.slice(0, 1).toLowerCase() + str2.slice(1, str2.length);  
+          } else if (i > 1 && gibberish[i - 2] === '.') {
+            gibberish = str1 + 'Idig' + str2.slice(0, 1).toLowerCase() + str2.slice(1, str2.length);
+          } else {
+            gibberish = str1 + 'idig' + str2.slice(0, 1).toLowerCase() + str2.slice(1, str2.length);
+          }
+          i += 4;
+          length += 4;
+        }
+      }
+      answer = {
+        'translated': gibberish,
+        'lang': 'gibberish'
+      }
+    } else {
+      answer = {
+        'error': `I can't translate that!`
+      }
+    }
+  } else {
+    answer = {
+      'error': `I can't translate that!`
     }
   }
 
