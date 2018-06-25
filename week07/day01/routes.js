@@ -135,7 +135,7 @@ app.post('/arrays/', (req, res) => {
   res.json(answer);
 });
 
-app.post('/sith/', (req, res) => { 
+app.post('/sith/', (req, res) => {
   let answer = '';
   
   if (typeof req.body.text === 'string' && req.body.text !== '') {
@@ -179,9 +179,13 @@ app.post('/sith/', (req, res) => {
       }
     }
 
-    answer = words.join(' ');
+    answer = {
+      'sith_text': words.join(' ')
+    }
   } else {
-    answer = 'Feed me some text you have to, padawan young you are. Hmmm.'
+    answer = {
+      'error': 'Feed me some text you have to, padawan young you are. Hmmm.'
+    }
   }
 
   res.json(answer);
