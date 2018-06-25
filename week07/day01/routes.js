@@ -69,4 +69,29 @@ app.get('/appenda/', (req, res) => {
   res.status(404).send('Please provide a word!');
 });
 
+app.post('/dountil/:what', (req, res) => {
+  let answer = {};
+  let untilNumber = req.body.until + 1;
+  let numberResult = 0;
+
+  if (req.params.what !== undefined) {
+    if (req.params.what === 'sum') {
+      for (let i = 0; i < untilNumber; i++) {
+        numberResult += i;
+      }
+    }
+    if (req.params.what === 'factor') {
+      numberResult = 1;
+      for (let i = 1; i < untilNumber; i++) {
+        numberResult *= i;
+      }
+    }
+    answer = {
+      "result": numberResult
+    }
+  }
+
+  res.json(answer);
+});
+
 module.exports = app;
