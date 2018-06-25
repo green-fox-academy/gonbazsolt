@@ -29,4 +29,28 @@ app.get('/doubling/', (req, res) => {
   res.json(message);
 });
 
+app.get('/greeter/', (req, res) => {
+  let message = {};
+
+  if (req.query.name !== undefined && req.query.title !== undefined) {
+    message = {
+        "welcome_message": `Oh, hi there ${req.query.name}, my dear ${req.query.title}!`
+      };
+  } else if (req.query.name === undefined) {
+    message = {
+        "error": "Please provide a name!"
+      };
+  } else if (req.query.title === undefined) {
+    message = {
+        "error": "Please provide a title!"
+      };
+  } else {
+    message = {
+      "error": "Please provide both a name and a title!"
+    };
+  }
+
+  res.json(message);
+});
+
 module.exports = app;
