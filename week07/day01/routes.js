@@ -135,4 +135,56 @@ app.post('/arrays/', (req, res) => {
   res.json(answer);
 });
 
+app.post('/sith/', (req, res) => { 
+  let answer = '';
+  
+  if (typeof req.body.text === 'string' && req.body.text !== '') {
+    let words = req.body.text.split(' ');
+    let start = 0;
+    let yodaWords = ['Arrgh.', 'Uhmm.', 'Err..err.err.', 'Whoa.', 'Yuck.', 'Tsk-tsk.', 'Phew.', 'Oops.'];
+    
+    if (words[words.length - 1][words[words.length - 1].length - 1] !== '.') {
+      words[words.length - 1] = words[words.length - 1].concat('.');
+    }
+    
+    for (let i = 0; i < words.length; i++) {
+      
+      if (words[i][words[i].length - 1] === '.') {
+        for (let j = start; j < i + 1; j+=2) {
+        
+          if (j !== i) {
+            let swap = words[j];
+            if (swap[0].toUpperCase() === swap[0]) {
+              swap = swap.toLowerCase();
+              let firstLetter = words[j + 1].slice(0, 1).toUpperCase();
+              words[j + 1] = firstLetter.concat(words[j + 1].slice(1, words[j + 1].length));
+            }
+            if (words[j + 1].endsWith('.')) {
+              words[j + 1] = words[j + 1].slice(0, words[j + 1].length - 1);
+              swap = swap.concat('.');
+            }
+            words[j] = words[j + 1];
+            words[j + 1] = swap;
+          }
+        }
+        let randNum1 = Math.floor(Math.random() * 2 + 1);
+        
+        for (let j = 0; j < randNum1; j++) {
+          let randNum2 = Math.floor(Math.random() * 8);
+          words.splice(i + 1, 0, yodaWords[randNum2]);
+          i += 1;
+        }
+        
+        start = i + 1;
+      }
+    }
+
+    answer = words.join(' ');
+  } else {
+    answer = 'Feed me some text you have to, padawan young you are. Hmmm.'
+  }
+
+  res.json(answer);
+});
+
 module.exports = app;
