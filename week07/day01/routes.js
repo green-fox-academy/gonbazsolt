@@ -105,38 +105,62 @@ app.post('/arrays/', (req, res) => {
   let answer = {};
   let counted;
 
-  switch (req.body.what) {
-    case 'sum':
-      counted = 0;
-      req.body.numbers.forEach(element => {
-        counted += element;
-      });
-      answer = {
-        "result": counted
-      }
-      break;
-    case 'multiply':
-      counted = 1;
-      req.body.numbers.forEach(element => {
-        counted *= element;
-      });
-      answer = {
-        "result": counted
-      }
-      break;
-    case 'double':
-      counted = [];
-      req.body.numbers.forEach(element => {
-        counted.push(element * 2);
-      });
-      answer = {
-        "result": counted
-      }
-      break;
-    default:
-      answer = {
-        "error": "Please provide what to do with the numbers!"
-      }
+  if (req.body.numbers !== undefined) {
+    switch (req.body.what) {
+      case 'sum':
+        if (req.body.numbers.length !== 0) {
+          counted = 0;
+          req.body.numbers.forEach(element => {
+            counted += element;
+          });
+          answer = {
+            "result": counted
+          }
+        } else {
+          answer = {
+            "error": "Please provide the numbers to could summarize them!"
+          }
+        }
+        break;
+      case 'multiply':
+        if (req.body.numbers.length !== 0) {
+          counted = 1;
+          req.body.numbers.forEach(element => {
+            counted *= element;
+          });
+          answer = {
+            "result": counted
+          }
+        } else {
+          answer = {
+            "error": "Please provide the numbers to could multiply them!"
+          }
+        }
+        break;
+      case 'double':
+        if (req.body.numbers.length !== 0) {
+          counted = [];
+          req.body.numbers.forEach(element => {
+            counted.push(element * 2);
+          });
+          answer = {
+            "result": counted
+          }
+        } else {
+          answer = {
+            "error": "Please provide the numbers to could double each of the elements!"
+          }
+        }
+        break;
+      default:
+        answer = {
+          "error": "Please provide what to do with the numbers!"
+        }
+    }
+  } else {
+    answer = {
+      "error": "Please provide numbers to could do anything with them!"
+    }
   }
 
   res.json(answer);
