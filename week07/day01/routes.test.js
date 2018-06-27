@@ -278,3 +278,64 @@ test('/arrays/ endpoint (what:"double" an empty number array provided)', (t) => 
       t.end();
     });
 });
+
+test('/sith/ endpoint (not a string provided)', (t) => {
+  request(app)
+    .post('/sith/')
+    .send({ "text": 178 })
+    .expect('Content-Type', /json/)
+    .expect(200, { 'error': 'Feed me some text you have to, padawan young you are. Hmmm.' })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
+
+test('/sith/ endpoint (an empty string provided)', (t) => {
+  request(app)
+    .post('/sith/')
+    .send({ "text": "" })
+    .expect('Content-Type', /json/)
+    .expect(200, { 'error': 'Feed me some text you have to, padawan young you are. Hmmm.' })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
+
+test('/sith/ endpoint (an empty JSON provided)', (t) => {
+  request(app)
+    .post('/sith/')
+    .send({ })
+    .expect('Content-Type', /json/)
+    .expect(200, { 'error': 'Feed me some text you have to, padawan young you are. Hmmm.' })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
+
+test('/sith/ endpoint (an empty string provided)', (t) => {
+  request(app)
+    .post('/sith/')
+    .send({ })
+    .expect('Content-Type', /json/)
+    .expect(200, { 'error': 'Feed me some text you have to, padawan young you are. Hmmm.' })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
+
+test('/sith/ endpoint (string provided)', (t) => {
+
+  request(app)
+    .post('/sith/?case=test')
+    .send({ "text": "This is my cool example sentence. Just for fun." })
+    .expect('Content-Type', /json/)
+    .expect(200, { "sith_text": 'Is this cool my sentence example. For just fun.' })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
