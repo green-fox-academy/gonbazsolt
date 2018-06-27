@@ -198,14 +198,17 @@ app.post('/sith/', (req, res) => {
             words[j + 1] = swap;
           }
         }
-        let randNum1 = Math.floor(Math.random() * 2 + 1);
-        
-        for (let j = 0; j < randNum1; j++) {
-          let randNum2 = Math.floor(Math.random() * 8);
-          words.splice(i + 1, 0, yodaWords[randNum2]);
-          i += 1;
+
+        if (req.query.case === undefined) {
+          let randNum1 = Math.floor(Math.random() * 2 + 1);
+          
+          for (let j = 0; j < randNum1; j++) {
+            let randNum2 = Math.floor(Math.random() * 8);
+            words.splice(i + 1, 0, yodaWords[randNum2]);
+            i += 1;
+          }
         }
-        
+
         start = i + 1;
       }
     }
