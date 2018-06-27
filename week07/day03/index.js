@@ -55,7 +55,30 @@ app.get('/booknames', (req, res) => {
 });
 
 app.get('/books', (req, res) => {
-  let sql = 'SELECT book_name, aut_name, cate_descrip, pub_name, book_price FROM book_mast, author, category, publisher WHERE author.aut_id = book_mast.aut_id AND category.cate_id = book_mast.cate_id AND publisher.pub_id = book_mast.pub_id ORDER BY book_name;';
+  let sql = 'SELECT book_name, aut_name, cate_descrip, pub_name, book_price FROM book_mast, author, category, publisher WHERE author.aut_id = book_mast.aut_id AND category.cate_id = book_mast.cate_id AND publisher.pub_id = book_mast.pub_id;';
+
+  if (req.query.category) {
+    sql = sql.substring(0, sql.length - 1);
+    sql = sql.concat(` AND cate_descrip = "${req.query.category}";`);
+  } 
+  
+  if (req.query.publisher) {
+    sql = sql.substring(0, sql.length - 1);
+    sql = sql.concat(` AND pub_name = "${req.query.publisher}";`);
+  }
+
+  if (req.query.plt) {
+    sql = sql.substring(0, sql.length - 1);
+    sql = sql.concat(` AND book_price < ${req.query.plt};`);
+  }
+
+  if (req.query.pgt) {
+    sql = sql.substring(0, sql.length - 1);
+    sql = sql.concat(` AND book_price > ${req.query.pgt};`);
+  }
+
+  sql = sql.substring(0, sql.length - 1);
+  sql = sql.concat(' ORDER BY book_name;');
 
   conn.query(sql, function(err, rows) {
     if (err) {
