@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+
+  <head>
+    <meta charset="utf-8">
+    <title>Bookstore - book names</title>  
+    <link rel="stylesheet" type="text/css" href="/static/style_book_names.css">
+  </head>
+
+  <body class="screen">
+    <div class="container">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Book name</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% book_names.forEach( (item, index) => { %>
+            <tr>
+              <td>
+                <%= index %>
+              </td>
+              <td>
+                <%= item %>
+              </td>
+            </tr>
+            <% }); %>
+        </tbody>
+      </table>
+    </div>
+  </body>
+
+</html>

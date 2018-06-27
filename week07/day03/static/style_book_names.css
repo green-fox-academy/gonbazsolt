@@ -1,0 +1,19 @@
+td, th {
+  border: 2px solid white;
+  padding: 0.5rem;
+}
+
+table {
+  border-collapse: collapse;
+}
+
+thead {
+  background: black;
+  color: white;
+  text-transform: uppercase;
+  font-weight: bold;
+}
+
+tbody tr:nth-child(odd) {
+  background: #eee;
+}
