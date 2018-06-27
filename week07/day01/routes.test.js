@@ -339,3 +339,105 @@ test('/sith/ endpoint (string provided)', (t) => {
       t.end();
     });
 });
+
+test('/translate/ endpoint (empty object provided)', (t) => {
+
+  request(app)
+    .post('/translate/')
+    .send({ })
+    .expect('Content-Type', /json/)
+    .expect(200, { "error": "I can't translate that!" })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
+
+test('/translate/ endpoint (empty string provided)', (t) => {
+
+  request(app)
+    .post('/translate/')
+    .send({ "text": "" })
+    .expect('Content-Type', /json/)
+    .expect(200, { "error": "I can't translate that!" })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
+
+test('/translate/ endpoint (string provided; lang: hu; no consecutive double vowel)', (t) => {
+
+  request(app)
+    .post('/translate/')
+    .send({
+      "text": "Ez egy peldamondat. Remelem celbatalal.",
+      "lang": "hu"
+    })
+    .expect('Content-Type', /json/)
+    .expect(200, {
+      "translated": "Evez evegy peveldavamovondavat. Revemevelevem cevelbavatavalaval.",
+      "lang": "teve"
+    })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
+
+test('/translate/ endpoint (string provided; lang: hu; consecutive vowels)', (t) => {
+
+  request(app)
+    .post('/translate/')
+    .send({
+      "text": "Ez egy peldamondat. Koreaiak fiai.",
+      "lang": "hu"
+    })
+    .expect('Content-Type', /json/)
+    .expect(200, {
+      "translated": "Evez evegy peveldavamovondavat. Kovoreveavaiviavak fiviavaivi.",
+      "lang": "teve"
+    })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
+
+test('/translate/ endpoint (string provided; lang: en; no consecutive double vowel; no vowel at any word first position)', (t) => {
+
+  request(app)
+    .post('/translate/')
+    .send({
+      "text": "Responds with the translated text.",
+      "lang": "en"
+    })
+    .expect('Content-Type', /json/)
+    .expect(200, {
+      "translated": "Ridigespidigonds widigith thidige tridiganslidigatidiged tidigext.",
+      "lang": "gibberish"
+    })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
+
+test('/translate/ endpoint (string provided; lang: en; consecutive vowels; vowel at any word first position)', (t) => {
+
+  request(app)
+    .post('/translate/')
+    .send({
+      "text": "Creek. Example repeat the rules for each.",
+      "lang": "en"
+    })
+    .expect('Content-Type', /json/)
+    .expect(200, {
+      "translated": "Cridigeek. Idigexidigamplidige ridigepidigeat thidige ridigulidiges fidigor idigeach.",
+      "lang": "gibberish"
+    })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
