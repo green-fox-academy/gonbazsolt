@@ -59,6 +59,22 @@ app.get('/booknames', (req, res) => {
   });
 });
 
+app.get('/books', (req, res) => {
+  let sql = 'SELECT book_name, aut_name, cate_descrip, pub_name, book_price FROM book_mast, author, category, publisher WHERE author.aut_id = book_mast.aut_id AND category.cate_id = book_mast.cate_id AND publisher.pub_id = book_mast.pub_id ORDER BY book_name;';
+
+  conn.query(sql, function(err, rows) {
+    if (err) {
+      console.log(err);
+      res.status(500).send();
+      return;
+    }
+
+    res.render('books', {
+      books: rows
+    });
+  });
+});
+
 app.listen(PORT, () => {
   console.log('The server is up and running on port ' + PORT);
 });
