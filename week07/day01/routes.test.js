@@ -69,3 +69,24 @@ test('/greeter/ endpoint (neither name nor title)', (t) => {
       t.end();
     });
 });
+
+test('/appenda/ endpoint (appendable provided)', (t) => {
+  request(app)
+    .get('/appenda/bazook')
+    .expect('Content-Type', /json/)
+    .expect(200, { "appended": "bazooka" })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
+
+test('/appenda/ endpoint (no appendable provided)', (t) => {
+  request(app)
+    .get('/appenda/')
+    .expect(404)
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
