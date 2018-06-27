@@ -38,7 +38,7 @@ app.get('/test', (req, res) => {
   });
 });
 
-app.get('/test2', (req, res) => {
+app.get('/booknames', (req, res) => {
   let sql = `SELECT book_name FROM book_mast ORDER BY book_name;`;
 
   conn.query(sql, function(err, rows) {
@@ -55,22 +55,6 @@ app.get('/test2', (req, res) => {
 
     res.render('book_names', {
       book_names: book_names
-    });
-  });
-});
-
-app.get('/booknames', (req, res) => {
-  let sql = `SELECT book_name FROM book_mast ORDER BY book_name;`;
-
-  conn.query(sql, function(err, rows) {
-    if (err) {
-      console.log(err);
-      res.status(500).send();
-      return;
-    }
-    
-    res.json({
-      book_names: rows
     });
   });
 });
