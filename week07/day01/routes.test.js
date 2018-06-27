@@ -146,3 +146,135 @@ test('/dountil/ endpoint (neither sum nor factor)', (t) => {
       t.end();
     });
 });
+
+test('/arrays/ endpoint (an empty object provided)', (t) => {
+  request(app)
+    .post('/arrays/')
+    .send({ })
+    .expect('Content-Type', /json/)
+    .expect(200, { "error": "Please provide numbers to could do anything with them!" })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
+
+test('/arrays/ endpoint (array of numbers provided but no what-to-do)', (t) => {
+  request(app)
+    .post('/arrays/')
+    .send({ "numbers": [1, 2, 5, 10] })
+    .expect('Content-Type', /json/)
+    .expect(200, { "error": "Please provide what to do with the numbers!" })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
+
+test('/arrays/ endpoint (what:"sum" and array of numbers provided)', (t) => {
+  request(app)
+    .post('/arrays/')
+    .send({ "what": "sum", "numbers": [1, 2, 5, 10] })
+    .expect('Content-Type', /json/)
+    .expect(200, { "result": 18 })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
+
+test('/arrays/ endpoint (what:"sum" provided but no number property)', (t) => {
+  request(app)
+    .post('/arrays/')
+    .send({ "what": "sum" })
+    .expect('Content-Type', /json/)
+    .expect(200, { "error": "Please provide numbers to could do anything with them!" })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
+
+test('/arrays/ endpoint (what:"sum" an empty number array provided)', (t) => {
+  request(app)
+    .post('/arrays/')
+    .send({ "what": "sum", "numbers": [] })
+    .expect('Content-Type', /json/)
+    .expect(200, { "error": "Please provide the numbers to could summarize them!" })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
+
+test('/arrays/ endpoint (what:"multiply" and array of numbers provided)', (t) => {
+  request(app)
+    .post('/arrays/')
+    .send({ "what": "multiply", "numbers": [1, 2, 5, 10] })
+    .expect('Content-Type', /json/)
+    .expect(200, { "result": 100 })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
+
+test('/arrays/ endpoint (what:"multiply" provided but no number property)', (t) => {
+  request(app)
+    .post('/arrays/')
+    .send({ "what": "multiply" })
+    .expect('Content-Type', /json/)
+    .expect(200, { "error": "Please provide numbers to could do anything with them!" })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
+
+test('/arrays/ endpoint (what:"multiply" an empty number array provided)', (t) => {
+  request(app)
+    .post('/arrays/')
+    .send({ "what": "multiply", "numbers": [] })
+    .expect('Content-Type', /json/)
+    .expect(200, { "error": "Please provide the numbers to could multiply them!" })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
+
+test('/arrays/ endpoint (what:"double" and array of numbers provided)', (t) => {
+  request(app)
+    .post('/arrays/')
+    .send({ "what": "double", "numbers": [1, 2, 5, 10] })
+    .expect('Content-Type', /json/)
+    .expect(200, { "result": [2, 4, 10, 20] })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
+
+test('/arrays/ endpoint (what:"double" provided but no number property)', (t) => {
+  request(app)
+    .post('/arrays/')
+    .send({ "what": "double" })
+    .expect('Content-Type', /json/)
+    .expect(200, { "error": "Please provide numbers to could do anything with them!" })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
+
+test('/arrays/ endpoint (what:"double" an empty number array provided)', (t) => {
+  request(app)
+    .post('/arrays/')
+    .send({ "what": "double", "numbers": [] })
+    .expect('Content-Type', /json/)
+    .expect(200, { "error": "Please provide the numbers to could double each of the elements!" })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
