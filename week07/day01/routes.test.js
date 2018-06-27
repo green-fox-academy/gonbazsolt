@@ -90,3 +90,59 @@ test('/appenda/ endpoint (no appendable provided)', (t) => {
       t.end();
     });
 });
+
+test('/dountil/sum endpoint (number provided)', (t) => {
+  request(app)
+    .post('/dountil/sum')
+    .send({ until: 5 })
+    .expect('Content-Type', /json/)
+    .expect(200, { 'result': 15 })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
+
+test('/dountil/sum endpoint (no number provided)', (t) => {
+  request(app)
+    .post('/dountil/sum')
+    .expect('Content-Type', /json/)
+    .expect(200, { "error": "Please provide a number!" })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
+
+test('/dountil/factor endpoint (number provided)', (t) => {
+  request(app)
+    .post('/dountil/factor')
+    .send({ until: 5 })
+    .expect('Content-Type', /json/)
+    .expect(200, { 'result': 120 })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
+
+test('/dountil/factor endpoint (no number provided)', (t) => {
+  request(app)
+    .post('/dountil/factor')
+    .expect('Content-Type', /json/)
+    .expect(200, { "error": "Please provide a number!" })
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
+
+test('/dountil/ endpoint (neither sum nor factor)', (t) => {
+  request(app)
+    .post('/dountil/')
+    .expect(404)
+    .end((err, res) => {
+      t.error(err);
+      t.end();
+    });
+});
