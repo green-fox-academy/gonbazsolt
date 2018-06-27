@@ -48,13 +48,8 @@ app.get('/booknames', (req, res) => {
       return;
     }
     
-    let book_names = [];
-    rows.forEach(element => {
-      book_names.push(element.book_name);
-    });
-
     res.render('book_names', {
-      book_names: book_names
+      book_names: rows
     });
   });
 });
