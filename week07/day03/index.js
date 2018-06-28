@@ -88,7 +88,9 @@ app.get('/books', (req, res) => {
     }
 
     res.render('books', {
-      books: rows
+      books: rows,
+      plowert: req.query.plt,
+      pgreatert: req.query.pgt
     });
   });
 });

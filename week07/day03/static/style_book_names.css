@@ -17,3 +17,20 @@ thead {
 tbody tr:nth-child(odd) {
   background: #eee;
 }
+
+a {
+  text-decoration: none;
+  color: black;
+}
+
+a:hover {
+  font-weight: bold;
+}
+
+.publisher {
+  width: 200px;
+}
+
+p {
+  display: inline;
+}

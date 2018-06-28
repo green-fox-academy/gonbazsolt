@@ -9,6 +9,14 @@
 
   <body class="screen">
     <div class="container">
+      <a href="http://localhost:3000/books">
+        <button>Reset</button>
+      </a>
+      <input type="number" id="plt" placeholder="price lower than">
+      <input type="number" id="pgt" placeholder="price greater than">
+      <input type="text" id="category" placeholder="category">
+      <p>&</p>
+      <input type="text" id="publisher" placeholder="publisher">
       <table>
         <thead>
           <tr>
@@ -16,7 +24,7 @@
             <th>Title</th>
             <th>Author</th>
             <th>Category</th>
-            <th>Publisher</th>
+            <th class="publisher">Publisher</th>
             <th>Price</th>
           </tr>
         </thead>
@@ -33,10 +41,14 @@
                 <%= element.aut_name %>
               </td>
               <td>
-                <%= element.cate_descrip %>
+                <a href="http://localhost:3000/books?category=<%= element.cate_descrip %>">
+                  <%= element.cate_descrip %>
+                </a>
               </td>
               <td>
-                <%= element.pub_name %>
+                <a href="http://localhost:3000/books?publisher=<%= element.pub_name %>">
+                  <%= element.pub_name %>
+                </a>
               </td>
               <td>
                 <%= element.book_price %>
@@ -48,4 +60,31 @@
     </div>
   </body>
 
+  <script>
+    let plt = document.getElementById("plt");
+    let pgt = document.getElementById("pgt");
+    let category = document.getElementById("category");
+    let publisher = document.getElementById("publisher");
+
+    pgt.addEventListener('keypress', function (event) {
+      let key = event.keyCode;
+      if (key === 13) {
+        window.open(`http://localhost:3000/books?pgt=${pgt.value}`,"_self")
+      }
+    });
+
+    plt.addEventListener('keypress', function (event) {
+      let key = event.keyCode;
+      if (key === 13) {
+        window.open(`http://localhost:3000/books?plt=${plt.value}`,"_self")
+      }
+    });
+
+    publisher.addEventListener('keypress', function (event) {
+      let key = event.keyCode;
+      if (key === 13) {
+        window.open(`http://localhost:3000/books?category=${category.value}&publisher=${publisher.value}`,"_self")
+      }
+    });
+  </script>
 </html>
