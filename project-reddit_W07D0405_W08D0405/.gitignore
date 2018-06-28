@@ -1,0 +1,4 @@
+node_modules
+.env
+static/what-to-here.txt
+views/what-to-here.txt
