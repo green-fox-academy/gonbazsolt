@@ -28,4 +28,20 @@ app.get('/hello', (req, res) => {
   res.json("hello");
 });
 
+app.get('/posts', (req, res) => {
+  let sql = 'SELECT * FROM posts;';
+
+  conn.query(sql, function(err, rows) {
+    if (err) {
+      console.log(err);
+      res.status(500).send();
+      return;
+    }
+    
+    res.json({
+      posts: rows
+    });
+  });
+});
+
 module.exports = app;
