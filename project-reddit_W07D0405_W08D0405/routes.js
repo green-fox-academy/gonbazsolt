@@ -44,4 +44,20 @@ app.get('/posts', (req, res) => {
   });
 });
 
+app.post('/posts', (req, res) => {
+  let sql = `INSERT INTO posts VALUES (null, "${req.body.title}", "${req.body.url}", now(), 0, "${req.headers.username}", null, null);`;
+
+  conn.query(sql, function(err, record) {
+    if (err) {
+      console.log(err);
+      res.status(500).send();
+      return;
+    }
+    
+    res.json({
+      post: record
+    });
+  });
+});
+
 module.exports = app;
