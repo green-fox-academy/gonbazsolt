@@ -60,4 +60,115 @@ app.post('/posts', (req, res) => {
   });
 });
 
+app.put('/posts/:id/downvote', (req, res) => {
+  let userId = req.headers.username;
+  let postId = req.params.id;
+  let sql = `SELECT * FROM posts WHERE id = ${postId};`;
+
+  conn.query(sql, function(err, record) {
+    if (err) {
+      console.log(err);
+      res.status(500).send();
+      return;
+    }
+    
+    if (record[0].display) {
+      if (record[0].vote_user) {
+        if (record[0].vote_user.indexOf(userId) !== -1) {
+          let voteUsers = record[0].vote_user.split('|');
+          let voteValues = record[0].vote_value.split('|');
+          let userVoteIndex = voteUsers.indexOf(userId);
+
+          if (voteValues[userVoteIndex] !== '-1') {
+            voteUsers.splice(userVoteIndex, 1);
+            record[0].vote_user = voteUsers.join('|');
+            voteValues.splice(userVoteIndex, 1);
+            record[0].vote_value = voteValues.join('|');
+          } else {
+            var vote_err = `${voteUsers[userVoteIndex]} has upvoted the post with id#${postId}!`; 
+          }
+        } else {
+          record[0].vote_user = record[0].vote_user + `|${userId}`;
+          record[0].vote_value = record[0].vote_value + `|-1`;
+          record[0].score -= 1;
+        }
+      } else {
+        record[0].vote_user = `${userId}`;
+        record[0].vote_value = `-1`;
+        record[0].score -= 1;
+      }
+      sql = `UPDATE posts SET score=${record[0].score}, vote_value="${record[0].vote_value}", vote_user="${record[0].vote_user}" WHERE id=${postId}`;
+      conn.query(sql, function(err, record) {
+        if (err) {
+          console.log(err);
+          res.status(500).send();
+          return;
+        }
+      });
+    } else {
+      var vote_err = `The post with id#${postId} doesn't exist!`;
+    }
+
+    res.json({
+      down_voted: record,
+      error: vote_err
+    });
+  });
+});
+
+app.put('/posts/:id/upvote', (req, res) => {
+  let userId = req.headers.username;
+  let postId = req.params.id;
+  let sql = `SELECT * FROM posts WHERE id = ${postId};`;
+
+  conn.query(sql, function(err, record) {
+    if (err) {
+      console.log(err);
+      res.status(500).send();
+      return;
+    }
+    if (record[0].display) {
+      if (record[0].vote_user) {
+        if (record[0].vote_user.indexOf(userId) !== -1) {
+          let voteUsers = record[0].vote_user.split('|');
+          let voteValues = record[0].vote_value.split('|');
+          let userVoteIndex = voteUsers.indexOf(userId);
+
+          if (voteValues[userVoteIndex] !== '1') {
+            voteUsers.splice(userVoteIndex, 1);
+            record[0].vote_user = voteUsers.join('|');
+            voteValues.splice(userVoteIndex, 1);
+            record[0].vote_value = voteValues.join('|');
+          } else {
+            var vote_err = `${voteUsers[userVoteIndex]} has upvoted the post with id#${postId}!`;
+          }
+        } else {
+          record[0].vote_user = record[0].vote_user + `|${userId}`;
+          record[0].vote_value = record[0].vote_value + `|1`;
+          record[0].score += 1;
+        }
+      } else {
+        record[0].vote_user = `${userId}`;
+        record[0].vote_value = `1`;
+        record[0].score += 1;
+      }
+      sql = `UPDATE posts SET score=${record[0].score}, vote_value="${record[0].vote_value}", vote_user="${record[0].vote_user}" WHERE id=${postId};`;
+      conn.query(sql, function(err, record) {
+        if (err) {
+          console.log(err);
+          res.status(500).send();
+          return;
+        }
+      });
+    } else {
+      var vote_err = `The post with id#${postId} doesn't exist!`;
+    }
+
+    res.json({
+      up_voted: record,
+      error: vote_err
+    });
+  });
+});
+
 module.exports = app;
