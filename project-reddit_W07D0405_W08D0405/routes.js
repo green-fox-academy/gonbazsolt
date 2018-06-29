@@ -224,7 +224,8 @@ app.put('/posts/:id', (req, res) => {
       if (record[0].owner === userId || userId === 'admin') {
         record[0].title = req.body.title;
         record[0].url = req.body.url;
-        sql = `UPDATE posts SET title="${req.body.title}", url="${req.body.url}" WHERE id=${postId};`;
+        record[0].last_modified = Date.now();
+        sql = `UPDATE posts SET title="${req.body.title}", url="${req.body.url}", last_modified=now() WHERE id=${postId};`;
         conn.query(sql, function(err, record) {
           if (err) {
             console.log(err);
