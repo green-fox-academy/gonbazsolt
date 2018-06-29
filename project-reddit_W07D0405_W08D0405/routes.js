@@ -208,4 +208,42 @@ app.delete('/posts/:id', (req, res) => {
   });
 });
 
+app.put('/posts/:id', (req, res) => {
+  let userId = req.headers.username;
+  let postId = req.params.id;
+  let sql = `SELECT * FROM posts WHERE id = ${postId};`;
+
+  conn.query(sql, function(err, record) {
+    if (err) {
+      console.log(err);
+      res.status(500).send();
+      return;
+    }
+    
+    if (record[0].display) {
+      if (record[0].owner === userId || userId === 'admin') {
+        record[0].title = req.body.title;
+        record[0].url = req.body.url;
+        sql = `UPDATE posts SET title="${req.body.title}", url="${req.body.url}" WHERE id=${postId};`;
+        conn.query(sql, function(err, record) {
+          if (err) {
+            console.log(err);
+            res.status(500).send();
+            return;
+          }
+        });
+      } else {
+        var mod_err = `${userId} is not the owner so couldn't modify the post with id#${postId}!`; 
+      }
+    } else {
+      var mod_err = `The post with id#${postId} doesn't exist!`;
+    }
+
+    res.json({
+      modified: record,
+      error: mod_err
+    });
+  });
+});
+
 module.exports = app;
