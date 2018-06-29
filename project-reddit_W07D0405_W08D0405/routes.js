@@ -171,4 +171,41 @@ app.put('/posts/:id/upvote', (req, res) => {
   });
 });
 
+app.delete('/posts/:id', (req, res) => {
+  let userId = req.headers.username;
+  let postId = req.params.id;
+  let sql = `SELECT * FROM posts WHERE id = ${postId};`;
+
+  conn.query(sql, function(err, record) {
+    if (err) {
+      console.log(err);
+      res.status(500).send();
+      return;
+    }
+    
+    if (record[0].display) {
+      if (record[0].owner === userId || userId === 'admin') {
+        record[0].display = false;
+        sql = `UPDATE posts SET display=false WHERE id=${postId};`;
+        conn.query(sql, function(err, record) {
+          if (err) {
+            console.log(err);
+            res.status(500).send();
+            return;
+          }
+        });
+      } else {
+        var del_err = `${userId} is not the owner so couldn't delete the post with id#${postId}!`; 
+      }
+    } else {
+      var del_err = `The post with id#${postId} doesn't exist!`;
+    }
+    
+    res.json({
+      deleted: record,
+      error: del_err
+    }); 
+  });
+});
+
 module.exports = app;
