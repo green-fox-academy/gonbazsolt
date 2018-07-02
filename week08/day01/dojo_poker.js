@@ -23,6 +23,10 @@ module.exports = function whoIsTheWinner(blackHand, whiteHand) {
       }
     });
   });
+  blackCardIndexes.sort().reverse();
+  whiteCardIndexes.sort().reverse();
+
+  console.log('black', blackCardIndexes, 'white', whiteCardIndexes);
 
   for (let i = 0; i < 5; i++) {
     if (!isWinner) {
