@@ -12,8 +12,16 @@ test('poker whoIsTheWinner: Tie', t => {
   t.end();
 });
 
+test('poker whoIsTheWinner: High Card (different 1st highest card in hands)', t => {
+  const actual = whoIsTheWinner([['2', 'H'], ['9', 'H'], ['10', 'H'], ['5', 'D'], ['8', 'S']],
+                                [['2', 'H'], ['3', 'H'], ['7', 'H'], ['5', 'D'], ['8', 'S']]);
+  const expected = 'Black wins';
 
-test('poker whoIsTheWinner: High Card', t => {
+  t.equal(actual, expected);
+  t.end();
+});
+
+test('poker whoIsTheWinner: High Card (same 1st highest but different 2nd highest card in hands)', t => {
   const actual = whoIsTheWinner([['2', 'H'], ['9', 'H'], ['10', 'H'], ['5', 'D'], ['8', 'S']],
                                 [['2', 'H'], ['3', 'H'], ['10', 'H'], ['5', 'D'], ['8', 'S']]);
   const expected = 'Black wins';
