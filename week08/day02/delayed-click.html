@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Workshop: EventListeners</title>
+  </head>
+  <body>
+    <button>Click me</button>
+    <script>
+      const button = document.querySelector('button');
+      const body = document.querySelector('body');
+
+      function textOut() {
+        let p = document.querySelector('p');
+        p.textContent += ' 2 seconds ellapsed';
+      }
+
+      button.addEventListener('click', () => {
+        let p = document.querySelector('p');
+        if (p) {
+          p.textContent = 'clicked now ...';
+        } else {
+          p = document.createElement('p');
+          p.textContent = 'clicked now ...';
+          body.appendChild(p);
+        }
+        setTimeout(textOut, 2000);
+      });
+    </script>
+  </body>
+</html>
