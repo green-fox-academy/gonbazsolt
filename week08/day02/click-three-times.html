@@ -1,0 +1,46 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <title>Workshop: EventListeners</title>
+  </head>
+  <body>
+    <button>Click me</button>
+    <script>
+      const button = document.querySelector('button');
+      const body = document.querySelector('body');
+      let clickTimes = -9999;
+
+      function textOut() {
+        let p = document.createElement('p');
+        p.textContent += ' 5 seconds ellapsed';
+        body.appendChild(p);
+      }
+
+      function clickAfter5Seconds() {
+        clickTimes = 0;
+      }
+      
+      setTimeout(textOut, 5000);
+      setTimeout(clickAfter5Seconds, 5000);
+
+      button.addEventListener('click', () => {
+        clickTimes += 1;
+        
+        if (clickTimes > 2) {
+          let p = document.getElementsByTagName('p')[1];
+          if (p) {
+            p.textContent = 'clicked 3 times after 5 seconds has gone ...';
+            clickTimes = 0;
+          } else {
+            p = document.createElement('p');
+            p.textContent = 'clicked 3 times after 5 seconds has gone ...';
+            body.appendChild(p);
+            clickTimes = 0;
+          }
+          setTimeout(() => { p.textContent = '...'; }, 3000);
+        }
+      });
+    </script>
+  </body>
+</html>
