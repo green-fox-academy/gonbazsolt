@@ -1,0 +1,67 @@
+body {
+  background: #3e94ec;
+  font-size: 28px;
+  font-family: 'Lato', sans-serif;
+}
+
+tbody {
+  color: #6F7071;
+}
+
+td, th {
+  padding: 20px 20px 20px 30px;
+  text-align: left;
+  font-weight: 400;
+}
+
+th {
+  border-bottom: 4px;
+  border-bottom-style: solid;
+  border-color: darkgrey;
+}
+
+td {
+  border-top: 2px;
+  border-top-style: solid;
+  border-color: darkgrey;
+}
+
+.first {
+  border-right: 2px;
+  border-right-style: solid;
+  border-color: darkgrey;
+}
+
+table {
+  border-collapse: collapse;
+  background: white;
+  width: 600px;
+  position: absolute;
+  left: calc(50% - 300px);
+  border-radius: 10px;
+}
+
+thead {
+  background: black;
+  color: darkgrey;
+}
+
+tbody tr:nth-child(odd) {
+  background: #eee;
+}
+
+.top-left {
+  border-top-left-radius: 10px;
+}
+
+.top-right {
+  border-top-right-radius: 10px;
+}
+
+.bottom-left {
+  border-bottom-left-radius: 10px;
+}
+
+.bottom-right {
+  border-bottom-right-radius: 10px;
+}
