@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Movie selector</title>
+  <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+</head>
+
+<body>
+  <form class="my-form">
+    <h1>
+      Movie selector
+    </h1>
+
+    <select class="genre">
+      <option value="0" disabled selected>Select a genre</option>
+      <option value="sci-fi">Sci-fi</option>
+      <option value="drama">Drama</option>
+      <option value="comedy">Comedy</option>
+    </select>
+
+    <select class="movie">
+      <option value="0" disabled selected>Select a movie</option>
+      <option value="Moon" class="sci-fi comedy" name="1">Moon</option>
+      <option value="2001 Space odessy" class="sci-fi drama">2001 Space odessy</option>
+      <option value="Contact" class="sci-fi drama">Contact</option>
+      <option value="Darkest hour" class="drama">Darkest hour</option>
+      <option value="There will be blood" class="drama comedy">There will be blood</option>
+      <option value="American beauty" class="drama">American beauty</option>
+      <option value="Airplane!" class="comedy">Airplane!</option>
+      <option value="Deadpool" class="sci-fi comedy">Deadpool</option>
+      <option value="Wayne's World" class="comedy">Wayne's World</option>
+    </select>
+
+    <h4>
+      The selected movie is ...
+    </h4>
+
+  </form>
+
+  <script>
+    let movie = document.querySelector('select.movie');
+    let genre = document.querySelector('select.genre');
+
+    movie.addEventListener('change', () => {
+      let h4 = document.getElementsByTagName('h4')[0];
+
+      h4.textContent = `The selected movie is ${movie.value}`;      
+    });
+
+    genre.addEventListener('change', () => {
+      let selectedMoviesByGenre = document.getElementsByClassName(genre.value);
+      
+      for (let i = 0; i < movie.length; i++) {
+        movie[i].disabled = false;  
+      }
+
+      for (let i = 0; i < selectedMoviesByGenre.length; i++) {
+       selectedMoviesByGenre[i].disabled = true;
+      }
+    });
+  </script>
+</body>
+
+</html>
