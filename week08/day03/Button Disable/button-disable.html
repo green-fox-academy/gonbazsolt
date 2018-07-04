@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Button Disable</title>
+  <link rel="stylesheet" type="text/css" media="screen" href="style.css" />
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+</head>
+
+<body>
+  <form class="my-form">
+    <h3>
+      RADIO BUTTONS
+    </h3>
+
+    <div>
+      <span>What is your favourite pet?</span>
+      <br>
+      <label id="fav-pet">
+        <label>
+          <input type="radio" value="dog" name="fav-pet">
+          <span>Dog</span>
+        </label>
+        <label>
+          <input type="radio" value="cat" name="fav-pet">
+          <span>Cat</span>
+        </label>
+        <label>
+          <input type="radio" value="goldfish" name="fav-pet">
+          <span>Viktor the goldfish</span>
+        </label>
+      </label>
+    </div>
+
+    <div>
+      <span>Do you want to sign up for cat facts?</span>
+      <br>
+      <label id="cat-fact">
+        <label>
+          <input type="radio" value="yes" name="cat-fact">
+          <span>Yes</span>
+        </label>
+        <label>
+          <input type="radio" value="no" name="cat-fact">
+          <span>No</span>
+        </label>
+      </label>
+    </div>
+
+    <div>
+      <label>
+        <button value="love-cats" name="btn-love-cats" disabled>
+          <span>I love cats</span>
+      </label>
+      <label>
+        <button value="sign-up" name="btn-sign-up" disabled>
+          <span>Sign up</span>
+      </label>
+    </div>
+
+  </form>
+
+  <script>
+    let signUpBtn = document.getElementsByName('btn-sign-up')[0];
+    let loveCatsBtn = document.getElementsByName('btn-love-cats')[0];
+    let alertMessage;
+    let inputFavPet = document.getElementById('fav-pet');
+    let inputCatFact = document.getElementById('cat-fact');
+
+    inputFavPet.addEventListener('change', () => {
+      let favPetValue = document.querySelector('input[name="fav-pet"]:checked').value;
+      let catFactValue;
+      
+      if (document.querySelector('input[name="cat-fact"]:checked')) {
+        catFactValue = document.querySelector('input[name="cat-fact"]:checked').value;
+      } else {
+        catFactValue = '';
+      }
+
+      signUpBtn.disabled = false;
+      if (favPetValue === 'cat' || favPetValue === 'dog') {
+        signUpBtn.disabled = false;
+        alertMessage = 'Thank you, you\'ve successfully signed up for cat facts';
+      } else if (catFactValue === 'no') {
+        signUpBtn.disabled = false;
+        alertMessage = 'Sigh, we still added you to the cat facts list';
+      } else {
+        signUpBtn.disabled = true;
+      }
+    });
+
+    inputCatFact.addEventListener('change', () => {
+      let catFactValue = document.querySelector('input[name="cat-fact"]:checked').value;
+      let favPetValue;
+
+      if (document.querySelector('input[name="fav-pet"]:checked')) {
+        favPetValue = document.querySelector('input[name="fav-pet"]:checked').value;
+      } else {
+        favPetValue = '';
+      }
+
+      if (catFactValue === 'yes') {
+        loveCatsBtn.disabled = false;
+        if (favPetValue === 'goldfish') {
+          signUpBtn.disabled = true;
+        }
+      } else if (favPetValue === 'goldfish') {
+        signUpBtn.disabled = false;
+        loveCatsBtn.disabled = true;
+      } else {
+        loveCatsBtn.disabled = true;
+      }
+    });
+
+    signUpBtn.addEventListener('click', () => {
+      alert(alertMessage);
+    });
+
+  </script>
+</body>
+
+</html>
