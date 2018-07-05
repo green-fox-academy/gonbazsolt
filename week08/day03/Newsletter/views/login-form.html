@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Login Form</title>
+  <link rel="stylesheet" type="text/css" media="screen" href="/views/style.css" />
+  <link href="https://fonts.googleapis.com/css?family=Lato" rel="stylesheet">
+</head>
+
+<body>
+  <form class="my-form">
+    <div>
+      <h3>
+        ACCOUNT LOGIN
+      </h3>
+      <label>
+        <span>Username</span>
+        <input type="text" name="username" id="username" maxlength="20" autofocus required>
+      </label>
+      <br>
+      <br>
+      <label>
+        <span>Email</span>
+        <input type="email" name="email" id="email" maxlength="30" required>
+      </label>
+      <button type="submit">Login</button>
+    </div>
+  </form>
+</body>
+
+<script>
+  const http = new XMLHttpRequest();
+  const form = document.querySelector('.my-form');
+  const body = document.querySelector('body');
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    http.open('GET', `http://localhost:3000/signup?username=${event.target[0].value}&email=${event.target[1].value}`, true);
+    http.onload = () => {
+      const response = JSON.parse(http.responseText);
+
+      if (!document.querySelector('h1')) {
+        const h1 = document.createElement('h1');
+        h1.innerText = `Thanks ${response.username}, we will send updates to ${response.email}`;
+        body.appendChild(h1);
+      } else {
+        document.querySelector('h1').innerText = `Thanks ${response.username}, we will send updates to ${response.email}`;
+      }
+    }
+    http.send();
+  });
+
+</script>
+
+</html>
