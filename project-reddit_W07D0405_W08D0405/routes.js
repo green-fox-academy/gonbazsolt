@@ -8,6 +8,7 @@ const mysql = require('mysql');
 
 app.use(express.json());
 app.use('/static', express.static('static'));
+app.use('/views', express.static('views'));
 
 let conn = mysql.createConnection ({
   host: process.env.DB_HOST,
@@ -24,8 +25,8 @@ conn.query(createPostsTableSQL, function(err, rows) {
   }
 });
 
-app.get('/hello', (req, res) => {
-  res.json("hello");
+app.get('/', (req, res) => {
+  res.sendFile(path.join(__dirname, './views/index.html'));
 });
 
 app.get('/posts', (req, res) => {
@@ -45,7 +46,7 @@ app.get('/posts', (req, res) => {
 });
 
 app.post('/posts', (req, res) => {
-  let sql = `INSERT INTO posts VALUES (null, "${req.body.title}", "${req.body.url}", now(), 0, "${req.headers.username}", null, null);`;
+  let sql = `INSERT INTO posts VALUES (null, "${req.body.title}", "${req.body.url}", now(), now(), 0, "${req.headers.username}", null, null, 1);`;
 
   conn.query(sql, function(err, record) {
     if (err) {
