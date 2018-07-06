@@ -128,13 +128,29 @@ img.upvote {
   flex: 1;
 }
 
+img.upvote:hover {
+  content: url("/views/upvoted.png");
+}
+
 div.score {
   flex: 3;
   text-align: center;
 }
 
+div.voted-user {
+  display: none;
+}
+
+div.voted-value {
+  display: none;
+}
+
 img.downvote {
   flex: 1;
+}
+
+img.downvote:hover {
+  content: url("/views/downvoted.png");
 }
 
 div.post-center {
@@ -148,4 +164,20 @@ div.post-right {
   flex-direction: column;
   flex: 10;
   margin: 3px;
+}
+
+div.ow-mo-de {
+  display: flex;
+}
+
+div.owner {
+  flex: 2;
+}
+
+a.modify {
+  flex: 1;
+}
+
+a.delete {
+  flex: 1;
 }
