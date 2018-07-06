@@ -27,12 +27,12 @@ const httpGetPosts = new XMLHttpRequest();
 httpGetPosts.open('GET', 'http://localhost:3000/posts', true);
 httpGetPosts.onload = () => {
   const response = JSON.parse(httpGetPosts.responseText);
-  const content = document.querySelector('div.content');
+  const content = document.querySelector('div.content_div');
 
   for (let i = 0; i < response.posts.length; i++) {
     if (response.posts[i].display) {
       let divPost = document.createElement('div');
-      divPost.setAttribute('class', 'post');
+      divPost.setAttribute('class', `post idnr${response.posts[i].id}`);
 
       let divLeft = document.createElement('div');
       divLeft.setAttribute('class', 'post-left');
