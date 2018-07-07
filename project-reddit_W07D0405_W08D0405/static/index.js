@@ -1,5 +1,20 @@
 'use strict';
 
+function convertUnixTimestampToDateTime(unix_format) {
+  let date = new Date(unix_format);
+  let year = date.getFullYear();
+  let month = '0' + (parseInt(date.getMonth()) + 1).toString();
+  let day = '0' + date.getDate();
+  let hours = date.getHours();
+  let minutes = '0' + date.getMinutes();
+  let seconds = '0' + date.getSeconds();
+
+  return `${year}-${month.substr(-2)}-${day.substr(-2)} <${hours}:${minutes.substr(-2)}:${seconds.substr(-2)}>`;
+}
+
+// kesik a belso ora 2 orat, szoval jo lenne megis unix timestampet alkalmazni
+// az adatbazisban jo ido szerepel
+
 const btn = document.querySelector('button.login');
 let username = '';
 
@@ -11,12 +26,13 @@ btn.addEventListener('click', () => {
     const h4Login = document.querySelector('h4.login');
 
     activeItemsByUser(username);
+    activeCreatePostWindow(username);
 
     h4Login.textContent = `${username} logged in`;
     input.value = '';
-    input.focus();
   } else {
-    alert('Please fill username input field before press the Login button !!!')
+    alert('Please fill username input field before press the Login button !!!');
+    input.focus();
   }
 });
 
@@ -75,10 +91,12 @@ httpGetPosts.onload = () => {
 
       let aModify = document.createElement('a');
       aModify.setAttribute('class', 'modify');
+      aModify.setAttribute('rel', 'no-refresh');
       aModify.textContent = 'Modify';
 
       let aDelete = document.createElement('a');
       aDelete.setAttribute('class', 'delete');
+      aDelete.setAttribute('rel', 'no-refresh');
       aDelete.textContent = 'Delete';
 
       let divOwner = document.createElement('div');
@@ -144,6 +162,10 @@ function activeItemsByUser(user) {
   const modifyAnchors = document.querySelectorAll('a.modify');
   const deleteAnchors = document.querySelectorAll('a.delete');
   const owners = document.querySelectorAll('div.owner');
+  const id = document.querySelectorAll('div.id');
+  const titleToModify = document.querySelectorAll('div.title');
+  const urlToModify = document.querySelectorAll('div.url');
+  const lastModified = document.querySelectorAll('div.last-mod');
 
   for (let i = 0; i < votedUsers.length; i++) {
     upVoteImgs[i].src = '/views/upvote.png';
@@ -166,9 +188,53 @@ function activeItemsByUser(user) {
     }
 
     if (owners[i].textContent.indexOf(user) !== -1) {
-      modifyAnchors[i].setAttribute('href', '');
+      modifyAnchors[i].setAttribute('href', '#modify');
       modifyAnchors[i].style.fontWeight = 700;
-      deleteAnchors[i].setAttribute('href', '');
+
+      modifyAnchors[i].addEventListener('click', () => {
+        const inputModify = document.querySelectorAll('input.modify');
+        const btnModify = document.querySelector('button.modify');
+        const form = document.querySelector('form.modify-form');
+        const h2Modify = document.querySelector('h2.modify');
+
+        inputModify[0].removeAttribute('disabled');
+        inputModify[0].value = titleToModify[i].textContent;
+        inputModify[0].focus();
+        inputModify[1].removeAttribute('disabled');
+        inputModify[1].value = urlToModify[i].textContent;
+        btnModify.removeAttribute('disabled');
+        h2Modify.textContent = `MODIFY POST ID#${id[i].textContent.replace(/[^0-9\.]+/g, '')}`;
+        
+
+        form.addEventListener('submit', (event) => {
+          event.preventDefault();
+      
+          const httpPost = new XMLHttpRequest();
+        
+          httpPost.open('PUT', `http://localhost:3000/posts/${id[i].textContent.replace(/[^0-9\.]+/g, '')}`, true);
+      
+          httpPost.setRequestHeader('Content-Type', 'application/json');
+          httpPost.setRequestHeader('username', `${user}`);
+          httpPost.onload = () => {
+            const response = JSON.parse(httpPost.responseText);
+
+            titleToModify[i].textContent = response.modified[0].title;
+            urlToModify[i].textContent = response.modified[0].url;
+            lastModified[i].textContent = convertUnixTimestampToDateTime(response.modified[0].last_modified);
+            //kitorolni a 2 input mezo tartalmat es disable-re allitani a teljes form mezoit (3)
+            //visszaadni a focust a create post title mezonek kitorolni az ID szamot a H2 mezoben
+            //esetleg valami pipa, iksz ikont odarakni a create-modify formok submit gombja melle
+          }
+      
+          let body = {
+            "title": `${event.target[0].value}`,
+            "url": `${event.target[1].value}`
+          }
+          httpPost.send(JSON.stringify(body));
+        });
+      });
+
+      deleteAnchors[i].setAttribute('href', '#delete');
       deleteAnchors[i].style.fontWeight = 700;
     }
   }
@@ -184,13 +250,10 @@ function upvoteByUser(id, upImg, downImg, sc) {
     httpPutUpvote.onload = () => {
       const response = JSON.parse(httpPutUpvote.responseText);
 
-      //ki kell javitani, a score szamitasanal a belso tartalom eltunik, szoval azt vissza kell csinalni
-      //DOWNVOTE-nal is!!!!
-
       if (response.error) {
         alert(response.error);
       } else {
-      
+
         let divUsersVoted = document.createElement('div');
         divUsersVoted.setAttribute('class', 'voted-user');
         divUsersVoted.textContent = response.up_voted[0].vote_user;
@@ -214,7 +277,7 @@ function upvoteByUser(id, upImg, downImg, sc) {
       }
     }
     httpPutUpvote.send();
-    
+
   } else {
     alert('Nobody has logged in. Upvote is not possible !!!');
   }
@@ -257,8 +320,39 @@ function downvoteByUser(id, upImg, downImg, sc) {
       }
     }
     httpPutDownvote.send();
-    
+
   } else {
     alert('Nobody has logged in. Upvote is not possible !!!');
   }
+}
+
+function activeCreatePostWindow(user) {
+  const inputCreate = document.querySelectorAll('input.create');
+  const btnCreate = document.querySelector('button.create');
+  const form = document.querySelector('form.create-form');
+
+  inputCreate[0].removeAttribute('disabled');
+  inputCreate[0].focus();
+  inputCreate[1].removeAttribute('disabled');
+  btnCreate.removeAttribute('disabled');
+
+  form.addEventListener('submit', (event) => {
+    event.preventDefault();
+
+    const httpPost = new XMLHttpRequest();
+
+    httpPost.open('POST', `http://localhost:3000/posts`, true);
+
+    httpPost.setRequestHeader('Content-Type', 'application/json');
+    httpPost.setRequestHeader('username', `${user}`);
+    httpPost.onload = () => {
+      const response = JSON.parse(httpPost.responseText);
+    }
+
+    let body = {
+      "title": `${event.target[0].value}`,
+      "url": `${event.target[1].value}`
+    }
+    httpPost.send(JSON.stringify(body));
+  });
 }
