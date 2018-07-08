@@ -214,6 +214,10 @@ div.modify {
   border: 2px solid black;
 }
 
+.create-form {
+  height: 100%;
+}
+
 h2 {
   width: 335px;
   margin: 10px 0;
@@ -231,7 +235,7 @@ span.modify  {
 input.create,
 input.modify {
   margin: 0 20px 10px 20px;
-  width: 280px;
+  width: 290px;
 }
 
 button.create,
@@ -239,9 +243,21 @@ button.modify {
   color: white;
   background: black;
   padding: 9px 15px;
-  margin: 5px 0 0 130px;
+  margin: 9px 33px;
   border-style: none;
   border-radius: 30px;
   font-size: 12px;
-  display: block;
+  flex: 3;
+}
+
+div.form {
+  display: flex;
+  height: 50px;
+}
+
+img.form {
+  flex: 5.4;
+  width: 70px;
+  margin: 3px 15px;
+  border: 0;
 }

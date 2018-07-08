@@ -5,15 +5,12 @@ function convertUnixTimestampToDateTime(unix_format) {
   let year = date.getFullYear();
   let month = '0' + (parseInt(date.getMonth()) + 1).toString();
   let day = '0' + date.getDate();
-  let hours = date.getHours();
+  let hours = '0' + date.getHours();
   let minutes = '0' + date.getMinutes();
   let seconds = '0' + date.getSeconds();
 
-  return `${year}-${month.substr(-2)}-${day.substr(-2)} <${hours}:${minutes.substr(-2)}:${seconds.substr(-2)}>`;
+  return `${year}-${month.substr(-2)}-${day.substr(-2)} <${hours.substr(-2)}:${minutes.substr(-2)}:${seconds.substr(-2)}>`;
 }
-
-// kesik a belso ora 2 orat, szoval jo lenne megis unix timestampet alkalmazni
-// az adatbazisban jo ido szerepel
 
 const btn = document.querySelector('button.login');
 let username = '';
@@ -36,6 +33,114 @@ btn.addEventListener('click', () => {
   }
 });
 
+function createOnePost(httpResponse, divContent, index) {
+  let divPost = document.createElement('div');
+  divPost.setAttribute('class', `post idnr${httpResponse.posts[index].id}`);
+
+  let divLeft = document.createElement('div');
+  divLeft.setAttribute('class', 'post-left');
+
+  let divCenter = document.createElement('div');
+  divCenter.setAttribute('class', 'post-center');
+
+  let divRight = document.createElement('div');
+  divRight.setAttribute('class', 'post-right');
+
+  let divId = document.createElement('div');
+  divId.setAttribute('class', 'id');
+  divId.textContent = `id #${httpResponse.posts[index].id}`;
+
+  let divScoreVote = document.createElement('div');
+  divScoreVote.setAttribute('class', 'score-vote');
+
+  let divScore = document.createElement('div');
+  divScore.setAttribute('class', 'score');
+  divScore.textContent = httpResponse.posts[index].score;
+
+  let divUsersVoted = document.createElement('div');
+  divUsersVoted.setAttribute('class', 'voted-user');
+  divUsersVoted.textContent = httpResponse.posts[index].vote_user;
+
+  let divValuesVoted = document.createElement('div');
+  divValuesVoted.setAttribute('class', 'voted-value');
+  divValuesVoted.textContent = httpResponse.posts[index].vote_value;
+
+  let divTitle = document.createElement('div');
+  divTitle.setAttribute('class', 'title');
+  divTitle.textContent = httpResponse.posts[index].title;
+
+  let divUrl = document.createElement('div');
+  divUrl.setAttribute('class', 'url');
+  divUrl.textContent = httpResponse.posts[index].url;
+
+  let divOwnModDel = document.createElement('div');
+  divOwnModDel.setAttribute('class', 'ow-mo-de');
+
+  let aModify = document.createElement('a');
+  aModify.setAttribute('class', 'modify');
+  aModify.setAttribute('rel', 'no-refresh');
+  aModify.textContent = 'Modify';
+
+  let aDelete = document.createElement('a');
+  aDelete.setAttribute('class', 'delete');
+  aDelete.setAttribute('rel', 'no-refresh');
+  aDelete.textContent = 'Delete';
+
+  let divOwner = document.createElement('div');
+  divOwner.setAttribute('class', 'owner');
+  divOwner.textContent = `owner: ${httpResponse.posts[index].owner}`;
+
+  let divLastMod = document.createElement('div');
+  divLastMod.setAttribute('class', 'last-mod');
+  divLastMod.textContent = convertUnixTimestampToDateTime(httpResponse.posts[index].last_modified);
+
+  let imgUpvote = document.createElement('img');
+  imgUpvote.setAttribute('class', 'upvote');
+  imgUpvote.setAttribute('src', '/views/upvote.png');
+
+  imgUpvote.addEventListener('click', () => {
+    upvoteByUser(httpResponse.posts[index].id, imgUpvote, imgDownvote, divScore);
+  });
+
+  let imgDownvote = document.createElement('img');
+  imgDownvote.setAttribute('class', 'downvote');
+  imgDownvote.setAttribute('src', '/views/downvote.png');
+
+  imgDownvote.addEventListener('click', () => {
+    downvoteByUser(httpResponse.posts[index].id, imgUpvote, imgDownvote, divScore);
+  });
+
+  divScore.appendChild(divUsersVoted);
+  divScore.appendChild(divValuesVoted);
+
+  divScoreVote.appendChild(imgUpvote);
+  divScoreVote.appendChild(divScore);
+  divScoreVote.appendChild(imgDownvote);
+
+  divOwnModDel.appendChild(divOwner);
+  divOwnModDel.appendChild(aModify);
+  divOwnModDel.appendChild(aDelete);
+
+  divRight.appendChild(divOwnModDel);
+  divRight.appendChild(divLastMod);
+
+  divCenter.appendChild(divTitle);
+  divCenter.appendChild(divUrl);
+
+  divLeft.appendChild(divId);
+  divLeft.appendChild(divScoreVote);
+
+  divPost.appendChild(divLeft);
+  divPost.appendChild(divCenter);
+  divPost.appendChild(divRight);
+
+  divContent.appendChild(divPost);
+
+  if (!httpResponse.posts[index].display) {
+    divContent.setAttribute('hidden', 'hidden');
+  }
+}
+
 // main function: show all posts
 
 const httpGetPosts = new XMLHttpRequest();
@@ -47,107 +152,7 @@ httpGetPosts.onload = () => {
 
   for (let i = 0; i < response.posts.length; i++) {
     if (response.posts[i].display) {
-      let divPost = document.createElement('div');
-      divPost.setAttribute('class', `post idnr${response.posts[i].id}`);
-
-      let divLeft = document.createElement('div');
-      divLeft.setAttribute('class', 'post-left');
-
-      let divCenter = document.createElement('div');
-      divCenter.setAttribute('class', 'post-center');
-
-      let divRight = document.createElement('div');
-      divRight.setAttribute('class', 'post-right');
-
-      let divId = document.createElement('div');
-      divId.setAttribute('class', 'id');
-      divId.textContent = `id #${response.posts[i].id}`;
-
-      let divScoreVote = document.createElement('div');
-      divScoreVote.setAttribute('class', 'score-vote');
-
-      let divScore = document.createElement('div');
-      divScore.setAttribute('class', 'score');
-      divScore.textContent = response.posts[i].score;
-
-      let divUsersVoted = document.createElement('div');
-      divUsersVoted.setAttribute('class', 'voted-user');
-      divUsersVoted.textContent = response.posts[i].vote_user;
-
-      let divValuesVoted = document.createElement('div');
-      divValuesVoted.setAttribute('class', 'voted-value');
-      divValuesVoted.textContent = response.posts[i].vote_value;
-
-      let divTitle = document.createElement('div');
-      divTitle.setAttribute('class', 'title');
-      divTitle.textContent = response.posts[i].title;
-
-      let divUrl = document.createElement('div');
-      divUrl.setAttribute('class', 'url');
-      divUrl.textContent = response.posts[i].url;
-
-      let divOwnModDel = document.createElement('div');
-      divOwnModDel.setAttribute('class', 'ow-mo-de');
-
-      let aModify = document.createElement('a');
-      aModify.setAttribute('class', 'modify');
-      aModify.setAttribute('rel', 'no-refresh');
-      aModify.textContent = 'Modify';
-
-      let aDelete = document.createElement('a');
-      aDelete.setAttribute('class', 'delete');
-      aDelete.setAttribute('rel', 'no-refresh');
-      aDelete.textContent = 'Delete';
-
-      let divOwner = document.createElement('div');
-      divOwner.setAttribute('class', 'owner');
-      divOwner.textContent = `owner: ${response.posts[i].owner}`;
-
-      let divLastMod = document.createElement('div');
-      divLastMod.setAttribute('class', 'last-mod');
-      divLastMod.textContent = `${response.posts[i].last_modified.substring(0, 10)} <${response.posts[i].last_modified.substring(11, 19)}>`;
-
-      let imgUpvote = document.createElement('img');
-      imgUpvote.setAttribute('class', 'upvote');
-      imgUpvote.setAttribute('src', '/views/upvote.png');
-
-      imgUpvote.addEventListener('click', () => {
-        upvoteByUser(response.posts[i].id, imgUpvote, imgDownvote, divScore);
-      });
-
-      let imgDownvote = document.createElement('img');
-      imgDownvote.setAttribute('class', 'downvote');
-      imgDownvote.setAttribute('src', '/views/downvote.png');
-
-      imgDownvote.addEventListener('click', () => {
-        downvoteByUser(response.posts[i].id, imgUpvote, imgDownvote, divScore);
-      });
-
-      divScore.appendChild(divUsersVoted);
-      divScore.appendChild(divValuesVoted);
-
-      divScoreVote.appendChild(imgUpvote);
-      divScoreVote.appendChild(divScore);
-      divScoreVote.appendChild(imgDownvote);
-
-      divOwnModDel.appendChild(divOwner);
-      divOwnModDel.appendChild(aModify);
-      divOwnModDel.appendChild(aDelete);
-
-      divRight.appendChild(divOwnModDel);
-      divRight.appendChild(divLastMod);
-
-      divCenter.appendChild(divTitle);
-      divCenter.appendChild(divUrl);
-
-      divLeft.appendChild(divId);
-      divLeft.appendChild(divScoreVote);
-
-      divPost.appendChild(divLeft);
-      divPost.appendChild(divCenter);
-      divPost.appendChild(divRight);
-
-      content.appendChild(divPost);
+      createOnePost(response, content, i);
     }
   }
 }
@@ -193,9 +198,11 @@ function activeItemsByUser(user) {
 
       modifyAnchors[i].addEventListener('click', () => {
         const inputModify = document.querySelectorAll('input.modify');
+        const inputCreate = document.querySelectorAll('input.create');
         const btnModify = document.querySelector('button.modify');
         const form = document.querySelector('form.modify-form');
         const h2Modify = document.querySelector('h2.modify');
+        const imgForm = document.querySelectorAll('img.form');
 
         inputModify[0].removeAttribute('disabled');
         inputModify[0].value = titleToModify[i].textContent;
@@ -204,15 +211,14 @@ function activeItemsByUser(user) {
         inputModify[1].value = urlToModify[i].textContent;
         btnModify.removeAttribute('disabled');
         h2Modify.textContent = `MODIFY POST ID#${id[i].textContent.replace(/[^0-9\.]+/g, '')}`;
-        
 
         form.addEventListener('submit', (event) => {
           event.preventDefault();
-      
+
           const httpPost = new XMLHttpRequest();
-        
+
           httpPost.open('PUT', `http://localhost:3000/posts/${id[i].textContent.replace(/[^0-9\.]+/g, '')}`, true);
-      
+
           httpPost.setRequestHeader('Content-Type', 'application/json');
           httpPost.setRequestHeader('username', `${user}`);
           httpPost.onload = () => {
@@ -221,21 +227,61 @@ function activeItemsByUser(user) {
             titleToModify[i].textContent = response.modified[0].title;
             urlToModify[i].textContent = response.modified[0].url;
             lastModified[i].textContent = convertUnixTimestampToDateTime(response.modified[0].last_modified);
-            //kitorolni a 2 input mezo tartalmat es disable-re allitani a teljes form mezoit (3)
-            //visszaadni a focust a create post title mezonek kitorolni az ID szamot a H2 mezoben
-            //esetleg valami pipa, iksz ikont odarakni a create-modify formok submit gombja melle
+
+            inputModify[0].setAttribute('disabled', 'disabled');
+            inputModify[0].value = '';
+            inputModify[1].setAttribute('disabled', 'disabled');
+            inputModify[1].value = '';
+            btnModify.setAttribute('disabled', 'disabled');
+            h2Modify.textContent = `MODIFY POST ID#`;
+
+            inputCreate[0].focus();
+
+            if (response.error) {
+              imgForm[1].setAttribute('src', '/views/red-cross_transparent.png');
+              setTimeout(() => { imgForm[1].setAttribute('src', '/views/empty_transparent.png'); }, 2000);
+            } else {
+              imgForm[0].setAttribute('src', '/views/tick_transparent.png');
+              setTimeout(() => { imgForm[0].setAttribute('src', '/views/empty_transparent.png'); }, 2000);
+            }
+
+            let body = {
+              "title": `${event.target[0].value}`,
+              "url": `${event.target[1].value}`
+            }
+            httpPost.send(JSON.stringify(body));
           }
-      
-          let body = {
-            "title": `${event.target[0].value}`,
-            "url": `${event.target[1].value}`
-          }
-          httpPost.send(JSON.stringify(body));
         });
       });
 
       deleteAnchors[i].setAttribute('href', '#delete');
       deleteAnchors[i].style.fontWeight = 700;
+
+      deleteAnchors[i].addEventListener('click', () => {
+        const inputCreate = document.querySelectorAll('input.create');
+        const httpPost = new XMLHttpRequest();
+
+        httpPost.open('DELETE', `http://localhost:3000/posts/${id[i].textContent.replace(/[^0-9\.]+/g, '')}`, true);
+
+        httpPost.setRequestHeader('username', `${user}`);
+        httpPost.onload = () => {
+          const response = JSON.parse(httpPost.responseText);
+
+          let divPost = document.querySelector(`div.idnr${id[i].textContent.replace(/[^0-9\.]+/g, '')}`);
+          console.log(divPost);
+
+          if (response.error) {
+            alert(response.error);
+          } else {
+            divPost.style.display = 'none';
+            alert(`The post with id#${response.deleted[0].id} was deleted by ${user}!`);
+          }
+
+          inputCreate[0].focus();
+        }
+
+        httpPost.send();
+      });
     }
   }
 }
@@ -330,6 +376,7 @@ function activeCreatePostWindow(user) {
   const inputCreate = document.querySelectorAll('input.create');
   const btnCreate = document.querySelector('button.create');
   const form = document.querySelector('form.create-form');
+  const imgForm = document.querySelectorAll('img.form');
 
   inputCreate[0].removeAttribute('disabled');
   inputCreate[0].focus();
@@ -347,6 +394,22 @@ function activeCreatePostWindow(user) {
     httpPost.setRequestHeader('username', `${user}`);
     httpPost.onload = () => {
       const response = JSON.parse(httpPost.responseText);
+
+      if (response.error) {
+        imgForm[1].setAttribute('src', '/views/red-cross_transparent.png');
+        setTimeout(() => { imgForm[1].setAttribute('src', '/views/empty_transparent.png'); }, 2000);
+      } else {
+        const content = document.querySelector('div.content_div');
+
+        createOnePost(response, content, 0);
+
+        imgForm[0].setAttribute('src', '/views/tick_transparent.png');
+        setTimeout(() => { imgForm[0].setAttribute('src', '/views/empty_transparent.png'); }, 2000);
+
+        inputCreate[0].value = '';
+        inputCreate[1].value = '';
+        inputCreate[0].focus();
+      }
     }
 
     let body = {
