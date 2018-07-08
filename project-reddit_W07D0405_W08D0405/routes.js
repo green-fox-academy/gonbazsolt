@@ -10,7 +10,7 @@ app.use(express.json());
 app.use('/static', express.static('static'));
 app.use('/views', express.static('views'));
 
-let conn = mysql.createConnection ({
+let conn = mysql.createConnection({
   host: process.env.DB_HOST,
   user: process.env.DB_USER,
   password: process.env.DB_PASSWORD,
@@ -19,7 +19,7 @@ let conn = mysql.createConnection ({
 
 let createPostsTableSQL = 'CREATE TABLE IF NOT EXISTS posts (id INT PRIMARY KEY AUTO_INCREMENT NOT NULL, title VARCHAR(100) NOT NULL, url VARCHAR(100) NOT NULL, timestamp TIMESTAMP NOT NULL, score INT NOT NULL, owner VARCHAR(20) NOT NULL, vote_user VARCHAR(420), vote_value VARCHAR(60), display BOOLEAN NOT NULL DEFAULT true);';
 
-conn.query(createPostsTableSQL, function(err, rows) {
+conn.query(createPostsTableSQL, function (err, rows) {
   if (err) {
     console.log(err);
   }
@@ -32,13 +32,13 @@ app.get('/', (req, res) => {
 app.get('/posts', (req, res) => {
   let sql = 'SELECT * FROM posts;';
 
-  conn.query(sql, function(err, rows) {
+  conn.query(sql, function (err, rows) {
     if (err) {
       console.log(err);
       res.status(500).send();
       return;
     }
-    
+
     res.json({
       posts: rows
     });
@@ -48,15 +48,30 @@ app.get('/posts', (req, res) => {
 app.post('/posts', (req, res) => {
   let sql = `INSERT INTO posts VALUES (null, "${req.body.title}", "${req.body.url}", now(), now(), 0, "${req.headers.username}", null, null, 1);`;
 
-  conn.query(sql, function(err, record) {
+  conn.query(sql, function (err, record) {
     if (err) {
       console.log(err);
       res.status(500).send();
       return;
     }
     
+    let post = [{
+      "id": record.insertId,
+      "title": req.body.title,
+      "url": req.body.url,
+      "timestamp": Date.now(),
+      "last_modified": Date.now(),
+      "score": 0,
+      "owner": req.headers.username,
+      "vote_user": "",
+      "vote_value": "",
+      "display": 1
+    }]
+
     res.json({
-      post: record
+      posts: post,
+      report: record,
+      error: err
     });
   });
 });
@@ -66,13 +81,13 @@ app.put('/posts/:id/downvote', (req, res) => {
   let postId = req.params.id;
   let sql = `SELECT * FROM posts WHERE id = ${postId};`;
 
-  conn.query(sql, function(err, record) {
+  conn.query(sql, function (err, record) {
     if (err) {
       console.log(err);
       res.status(500).send();
       return;
     }
-    
+
     if (record[0].display) {
       if (record[0].vote_user) {
         if (record[0].vote_user.indexOf(userId) !== -1) {
@@ -86,7 +101,7 @@ app.put('/posts/:id/downvote', (req, res) => {
             voteValues.splice(userVoteIndex, 1);
             record[0].vote_value = voteValues.join('|');
           } else {
-            var vote_err = `${voteUsers[userVoteIndex]} has upvoted the post with id#${postId}!`; 
+            var vote_err = `${voteUsers[userVoteIndex]} has upvoted the post with id#${postId}!`;
           }
         } else {
           record[0].vote_user = record[0].vote_user + `|${userId}`;
@@ -99,7 +114,7 @@ app.put('/posts/:id/downvote', (req, res) => {
         record[0].score -= 1;
       }
       sql = `UPDATE posts SET score=${record[0].score}, vote_value="${record[0].vote_value}", vote_user="${record[0].vote_user}" WHERE id=${postId}`;
-      conn.query(sql, function(err, record) {
+      conn.query(sql, function (err, record) {
         if (err) {
           console.log(err);
           res.status(500).send();
@@ -122,7 +137,7 @@ app.put('/posts/:id/upvote', (req, res) => {
   let postId = req.params.id;
   let sql = `SELECT * FROM posts WHERE id = ${postId};`;
 
-  conn.query(sql, function(err, record) {
+  conn.query(sql, function (err, record) {
     if (err) {
       console.log(err);
       res.status(500).send();
@@ -154,7 +169,7 @@ app.put('/posts/:id/upvote', (req, res) => {
         record[0].score += 1;
       }
       sql = `UPDATE posts SET score=${record[0].score}, vote_value="${record[0].vote_value}", vote_user="${record[0].vote_user}" WHERE id=${postId};`;
-      conn.query(sql, function(err, record) {
+      conn.query(sql, function (err, record) {
         if (err) {
           console.log(err);
           res.status(500).send();
@@ -177,18 +192,18 @@ app.delete('/posts/:id', (req, res) => {
   let postId = req.params.id;
   let sql = `SELECT * FROM posts WHERE id = ${postId};`;
 
-  conn.query(sql, function(err, record) {
+  conn.query(sql, function (err, record) {
     if (err) {
       console.log(err);
       res.status(500).send();
       return;
     }
-    
+
     if (record[0].display) {
       if (record[0].owner === userId || userId === 'admin') {
         record[0].display = false;
         sql = `UPDATE posts SET display=false WHERE id=${postId};`;
-        conn.query(sql, function(err, record) {
+        conn.query(sql, function (err, record) {
           if (err) {
             console.log(err);
             res.status(500).send();
@@ -196,16 +211,16 @@ app.delete('/posts/:id', (req, res) => {
           }
         });
       } else {
-        var del_err = `${userId} is not the owner so couldn't delete the post with id#${postId}!`; 
+        var del_err = `${userId} is not the owner so couldn't delete the post with id#${postId}!`;
       }
     } else {
       var del_err = `The post with id#${postId} doesn't exist!`;
     }
-    
+
     res.json({
       deleted: record,
       error: del_err
-    }); 
+    });
   });
 });
 
@@ -214,20 +229,20 @@ app.put('/posts/:id', (req, res) => {
   let postId = req.params.id;
   let sql = `SELECT * FROM posts WHERE id = ${postId};`;
 
-  conn.query(sql, function(err, record) {
+  conn.query(sql, function (err, record) {
     if (err) {
       console.log(err);
       res.status(500).send();
       return;
     }
-    
+
     if (record[0].display) {
       if (record[0].owner === userId || userId === 'admin') {
         record[0].title = req.body.title;
         record[0].url = req.body.url;
         record[0].last_modified = Date.now();
         sql = `UPDATE posts SET title="${req.body.title}", url="${req.body.url}", last_modified=now() WHERE id=${postId};`;
-        conn.query(sql, function(err, record) {
+        conn.query(sql, function (err, record) {
           if (err) {
             console.log(err);
             res.status(500).send();
@@ -235,7 +250,7 @@ app.put('/posts/:id', (req, res) => {
           }
         });
       } else {
-        var mod_err = `${userId} is not the owner so couldn't modify the post with id#${postId}!`; 
+        var mod_err = `${userId} is not the owner so couldn't modify the post with id#${postId}!`;
       }
     } else {
       var mod_err = `The post with id#${postId} doesn't exist!`;
