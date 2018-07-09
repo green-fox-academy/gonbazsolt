@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta charset="utf-8" />
+  <title>Animal Farm</title>
+</head>
+
+<body>
+  <button>Start a new day</button>
+
+  <script>
+    function Animal() {
+      this.hunger = 5;
+      this.thirst = 5;
+
+      this.eat = () => {
+        this.hunger -= 1;
+      }
+
+      this.drink = () => {
+        this.thirst -= 1;
+      }
+
+      this.play = () => {
+        this.hunger += 1;
+        this.thirst += 1;
+      }
+    }
+
+    function Farm(slot, animalNr) {
+      this.slots = slot - animalNr;
+      this.animals = [];
+
+      for (let i = 0; i < animalNr; i++) {
+        this.animals.push(new Animal());
+      }
+
+      this.breed = () => {
+        if (this.slots > 0) {
+          this.animals.push(new Animal());
+          this.slots -= 1;
+        }
+      }
+
+      this.slaughter = () => {
+        if (this.animals.length) {
+          let leastHungryAnimalIndex = 0;
+          this.animals.forEach((value, index) => {
+            if (value.hunger < this.animals[leastHungryAnimalIndex].hunger) {
+              leastHungryAnimalIndex = index;
+            }
+          });
+          this.animals.splice(leastHungryAnimalIndex, 1);
+          this.slots += 1;
+        }
+      }
+
+      this.progress = () => {
+        for (let i = 0; i < this.animals.length; i++) {
+          if (Math.random() * 10 > 5) {
+            this.animals[i].eat();
+          }
+
+          if (Math.random() * 10 > 5) {
+            this.animals[i].drink();
+          }
+
+          if (Math.random() * 10 > 5) {
+            this.animals[i].play();
+          }
+        }
+
+        if (Math.random() * 10 > 5) {
+          this.breed();
+        }
+
+        if (Math.random() * 10 > 5) {
+          this.slaughter();
+        }
+
+        let status = `we are ${(this.animals.length === this.slots) ? 'full' : (this.animals.length === 0) ? 'bankrupt' : 'okay'}`;
+        console.log(`The farm has ${this.animals.length} living animals, ${status}`);
+      }
+    }
+
+    const SheepFarm = new Farm(30, 30);
+    const button = document.querySelector('button');
+
+    button.addEventListener('click', () => {
+      SheepFarm.progress();
+    });
+  </script>
+</body>
+
+</html>
