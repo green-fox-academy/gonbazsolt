@@ -6,7 +6,7 @@ const app = express();
 app.get('/yondu', (req, res) => {
   let answer;
   
-  if (req.query.distance !== undefined || req.query.time !== undefined) {
+  if (req.query.distance !== undefined && req.query.time !== undefined) {
     answer = {
       "distance": req.query.distance,
       "time": req.query.time,
