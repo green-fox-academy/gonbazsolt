@@ -1,5 +1,7 @@
 'use strict';
 
+//refactor with render
+
 function convertUnixTimestampToDateTime(unix_format) {
   let date = new Date(unix_format);
   let year = date.getFullYear();
@@ -34,111 +36,113 @@ btn.addEventListener('click', () => {
 });
 
 function createOnePost(httpResponse, divContent, index) {
-  let divPost = document.createElement('div');
-  divPost.setAttribute('class', `post idnr${httpResponse.posts[index].id}`);
+  if (httpResponse.posts[index].display) {
+    //divPost.style.display = 'none';
 
-  let divLeft = document.createElement('div');
-  divLeft.setAttribute('class', 'post-left');
+    let divPost = document.createElement('div');
+    divPost.setAttribute('class', `post idnr${httpResponse.posts[index].id}`);
 
-  let divCenter = document.createElement('div');
-  divCenter.setAttribute('class', 'post-center');
+    let divLeft = document.createElement('div');
+    divLeft.setAttribute('class', 'post-left');
 
-  let divRight = document.createElement('div');
-  divRight.setAttribute('class', 'post-right');
+    let divCenter = document.createElement('div');
+    divCenter.setAttribute('class', 'post-center');
 
-  let divId = document.createElement('div');
-  divId.setAttribute('class', 'id');
-  divId.textContent = `id #${httpResponse.posts[index].id}`;
+    let divRight = document.createElement('div');
+    divRight.setAttribute('class', 'post-right');
 
-  let divScoreVote = document.createElement('div');
-  divScoreVote.setAttribute('class', 'score-vote');
+    let divId = document.createElement('div');
+    divId.setAttribute('class', 'id');
+    divId.textContent = `id #${httpResponse.posts[index].id}`;
 
-  let divScore = document.createElement('div');
-  divScore.setAttribute('class', 'score');
-  divScore.textContent = httpResponse.posts[index].score;
+    let divScoreVote = document.createElement('div');
+    divScoreVote.setAttribute('class', 'score-vote');
 
-  let divUsersVoted = document.createElement('div');
-  divUsersVoted.setAttribute('class', 'voted-user');
-  divUsersVoted.textContent = httpResponse.posts[index].vote_user;
+    let divScore = document.createElement('div');
+    divScore.setAttribute('class', 'score');
+    divScore.textContent = httpResponse.posts[index].score;
 
-  let divValuesVoted = document.createElement('div');
-  divValuesVoted.setAttribute('class', 'voted-value');
-  divValuesVoted.textContent = httpResponse.posts[index].vote_value;
+    let divUsersVoted = document.createElement('div');
+    divUsersVoted.setAttribute('class', 'voted-user');
+    divUsersVoted.textContent = httpResponse.posts[index].vote_user;
 
-  let divTitle = document.createElement('div');
-  divTitle.setAttribute('class', 'title');
-  divTitle.textContent = httpResponse.posts[index].title;
+    let divValuesVoted = document.createElement('div');
+    divValuesVoted.setAttribute('class', 'voted-value');
+    divValuesVoted.textContent = httpResponse.posts[index].vote_value;
 
-  let divUrl = document.createElement('div');
-  divUrl.setAttribute('class', 'url');
-  divUrl.textContent = httpResponse.posts[index].url;
+    let divTitle = document.createElement('div');
+    divTitle.setAttribute('class', 'title');
+    divTitle.textContent = httpResponse.posts[index].title;
 
-  let divOwnModDel = document.createElement('div');
-  divOwnModDel.setAttribute('class', 'ow-mo-de');
+    let divUrl = document.createElement('div');
+    divUrl.setAttribute('class', 'url');
+    divUrl.textContent = httpResponse.posts[index].url;
 
-  let aModify = document.createElement('a');
-  aModify.setAttribute('class', 'modify');
-  aModify.setAttribute('rel', 'no-refresh');
-  aModify.textContent = 'Modify';
+    let divOwnModDel = document.createElement('div');
+    divOwnModDel.setAttribute('class', 'ow-mo-de');
 
-  let aDelete = document.createElement('a');
-  aDelete.setAttribute('class', 'delete');
-  aDelete.setAttribute('rel', 'no-refresh');
-  aDelete.textContent = 'Delete';
+    let aModify = document.createElement('a');
+    aModify.setAttribute('class', 'modify');
+    aModify.setAttribute('rel', 'no-refresh');
+    aModify.textContent = 'Modify';
 
-  let divOwner = document.createElement('div');
-  divOwner.setAttribute('class', 'owner');
-  divOwner.textContent = `owner: ${httpResponse.posts[index].owner}`;
+    let aDelete = document.createElement('a');
+    aDelete.setAttribute('class', 'delete');
+    aDelete.setAttribute('rel', 'no-refresh');
+    aDelete.textContent = 'Delete';
 
-  let divLastMod = document.createElement('div');
-  divLastMod.setAttribute('class', 'last-mod');
-  divLastMod.textContent = convertUnixTimestampToDateTime(httpResponse.posts[index].last_modified);
+    let divOwner = document.createElement('div');
+    divOwner.setAttribute('class', 'owner');
+    divOwner.textContent = `owner: ${httpResponse.posts[index].owner}`;
 
-  let imgUpvote = document.createElement('img');
-  imgUpvote.setAttribute('class', 'upvote');
-  imgUpvote.setAttribute('src', '/views/upvote.png');
+    let divLastMod = document.createElement('div');
+    divLastMod.setAttribute('class', 'last-mod');
+    divLastMod.textContent = convertUnixTimestampToDateTime(httpResponse.posts[index].last_modified);
 
-  imgUpvote.addEventListener('click', () => {
-    upvoteByUser(httpResponse.posts[index].id, imgUpvote, imgDownvote, divScore);
-  });
+    let imgUpvote = document.createElement('img');
+    imgUpvote.setAttribute('class', 'upvote');
+    imgUpvote.setAttribute('src', '/views/upvote.png');
 
-  let imgDownvote = document.createElement('img');
-  imgDownvote.setAttribute('class', 'downvote');
-  imgDownvote.setAttribute('src', '/views/downvote.png');
+    imgUpvote.addEventListener('click', () => {
+      upvoteByUser(httpResponse.posts[index].id, imgUpvote, imgDownvote, divScore, divPost);
+    });
 
-  imgDownvote.addEventListener('click', () => {
-    downvoteByUser(httpResponse.posts[index].id, imgUpvote, imgDownvote, divScore);
-  });
+    let imgDownvote = document.createElement('img');
+    imgDownvote.setAttribute('class', 'downvote');
+    imgDownvote.setAttribute('src', '/views/downvote.png');
 
-  divScore.appendChild(divUsersVoted);
-  divScore.appendChild(divValuesVoted);
+    imgDownvote.addEventListener('click', () => {
+      downvoteByUser(httpResponse.posts[index].id, imgUpvote, imgDownvote, divScore, divPost);
+    });
 
-  divScoreVote.appendChild(imgUpvote);
-  divScoreVote.appendChild(divScore);
-  divScoreVote.appendChild(imgDownvote);
+    divScore.appendChild(divUsersVoted);
+    divScore.appendChild(divValuesVoted);
 
-  divOwnModDel.appendChild(divOwner);
-  divOwnModDel.appendChild(aModify);
-  divOwnModDel.appendChild(aDelete);
+    divScoreVote.appendChild(imgUpvote);
+    divScoreVote.appendChild(divScore);
+    divScoreVote.appendChild(imgDownvote);
 
-  divRight.appendChild(divOwnModDel);
-  divRight.appendChild(divLastMod);
+    divOwnModDel.appendChild(divOwner);
+    divOwnModDel.appendChild(aModify);
+    divOwnModDel.appendChild(aDelete);
 
-  divCenter.appendChild(divTitle);
-  divCenter.appendChild(divUrl);
+    divRight.appendChild(divOwnModDel);
+    divRight.appendChild(divLastMod);
 
-  divLeft.appendChild(divId);
-  divLeft.appendChild(divScoreVote);
+    divCenter.appendChild(divTitle);
+    divCenter.appendChild(divUrl);
 
-  divPost.appendChild(divLeft);
-  divPost.appendChild(divCenter);
-  divPost.appendChild(divRight);
+    divLeft.appendChild(divId);
+    divLeft.appendChild(divScoreVote);
 
-  divContent.appendChild(divPost);
+    divPost.appendChild(divLeft);
+    divPost.appendChild(divCenter);
+    divPost.appendChild(divRight);
 
-  if (!httpResponse.posts[index].display) {
-    divContent.setAttribute('hidden', 'hidden');
+    divContent.appendChild(divPost);
+
   }
+
 }
 
 // main function: show all posts
@@ -149,14 +153,28 @@ httpGetPosts.open('GET', 'http://localhost:3000/posts', true);
 httpGetPosts.onload = () => {
   const response = JSON.parse(httpGetPosts.responseText);
   const content = document.querySelector('div.content_div');
+  let postIndexesOrderByScore = [];
 
   for (let i = 0; i < response.posts.length; i++) {
-    if (response.posts[i].display) {
-      createOnePost(response, content, i);
-    }
+    postIndexesOrderByScore.push([parseInt(response.posts[i].score), i]);
+  }
+
+  postIndexesOrderByScore.sort(sortFunction);
+
+  for (let i = 0; i < response.posts.length; i++) {
+    createOnePost(response, content, postIndexesOrderByScore[i][1]);
   }
 }
 httpGetPosts.send();
+
+function sortFunction(a, b) {
+  if (a[0] === b[0]) {
+    return (a[1] < b[1]) ? -1 : 1;
+  }
+  else {
+    return (a[0] > b[0]) ? -1 : 1;
+  }
+}
 
 // up and down vote images change by username
 function activeItemsByUser(user) {
@@ -238,19 +256,24 @@ function activeItemsByUser(user) {
             inputCreate[0].focus();
 
             if (response.error) {
-              imgForm[1].setAttribute('src', '/views/red-cross_transparent.png');
-              setTimeout(() => { imgForm[1].setAttribute('src', '/views/empty_transparent.png'); }, 2000);
+              imgForm[3].setAttribute('src', '/views/red-cross_transparent.png');
+              setTimeout(() => { imgForm[3].setAttribute('src', '/views/empty_transparent.png'); }, 2000);
             } else {
-              imgForm[0].setAttribute('src', '/views/tick_transparent.png');
-              setTimeout(() => { imgForm[0].setAttribute('src', '/views/empty_transparent.png'); }, 2000);
+              imgForm[2].setAttribute('src', '/views/tick_transparent.png');
+              setTimeout(() => { imgForm[2].setAttribute('src', '/views/empty_transparent.png'); }, 2000);
             }
 
-            let body = {
-              "title": `${event.target[0].value}`,
-              "url": `${event.target[1].value}`
+            httpPost.onerror = () => {
+              console.log('*** ERROR ***');
             }
-            httpPost.send(JSON.stringify(body));
           }
+
+          let body = {
+            "title": `${event.target[0].value}`,
+            "url": `${event.target[1].value}`
+          }
+
+          httpPost.send(JSON.stringify(body));
         });
       });
 
@@ -268,7 +291,6 @@ function activeItemsByUser(user) {
           const response = JSON.parse(httpPost.responseText);
 
           let divPost = document.querySelector(`div.idnr${id[i].textContent.replace(/[^0-9\.]+/g, '')}`);
-          console.log(divPost);
 
           if (response.error) {
             alert(response.error);
@@ -286,7 +308,7 @@ function activeItemsByUser(user) {
   }
 }
 
-function upvoteByUser(id, upImg, downImg, sc) {
+function upvoteByUser(id, upImg, downImg, sc, post) {
 
   if (username !== '') {
     const httpPutUpvote = new XMLHttpRequest();
@@ -320,6 +342,19 @@ function upvoteByUser(id, upImg, downImg, sc) {
         } else {
           upImg.setAttribute('src', '/views/upvoted.png');
         }
+
+        let wasExchange;
+        do {
+          wasExchange = false;
+          if (post.previousSibling) {
+            let prevScore = parseInt(post.previousSibling.children[0].children[1].children[1].innerText);
+
+            if (score > prevScore) {
+              divUp(post);
+              wasExchange = true;
+            }
+          }
+        } while (wasExchange);
       }
     }
     httpPutUpvote.send();
@@ -329,7 +364,7 @@ function upvoteByUser(id, upImg, downImg, sc) {
   }
 }
 
-function downvoteByUser(id, upImg, downImg, sc) {
+function downvoteByUser(id, upImg, downImg, sc, post) {
 
   if (username !== '') {
     const httpPutDownvote = new XMLHttpRequest();
@@ -363,6 +398,19 @@ function downvoteByUser(id, upImg, downImg, sc) {
         } else {
           downImg.setAttribute('src', '/views/downvoted.png');
         }
+
+        let wasExchange;
+        do {
+          wasExchange = false;
+          if (post.nextSibling) {
+            let nextScore = parseInt(post.nextSibling.children[0].children[1].children[1].innerText);
+
+            if (score < nextScore) {
+              divDown(post);
+              wasExchange = true;
+            }
+          }
+        } while (wasExchange);
       }
     }
     httpPutDownvote.send();
@@ -370,6 +418,249 @@ function downvoteByUser(id, upImg, downImg, sc) {
   } else {
     alert('Nobody has logged in. Upvote is not possible !!!');
   }
+}
+
+function divDown(divPost) {
+  let tempNextPost = divPost.nextSibling.cloneNode(true);
+  let parent = divPost.parentNode;
+
+  let id = tempNextPost.querySelector('.id').textContent.replace(/[^0-9\.]+/g, '');
+  let imgUpvote = tempNextPost.querySelector('.upvote');
+  let imgDownvote = tempNextPost.querySelector('.downvote');
+  let divScore = tempNextPost.querySelector('.score');
+  let owner = tempNextPost.querySelector('.owner').textContent;
+
+  //code redundancy --> REFACTOR !!! active delete and modify anchor if user=owner
+  const modifyAnchor = tempNextPost.querySelector('a.modify');
+  const deleteAnchor = tempNextPost.querySelector('a.delete');
+  const titleToModify = tempNextPost.querySelector('div.title');
+  const urlToModify = tempNextPost.querySelector('div.url');
+  const lastModified = tempNextPost.querySelector('div.last-mod');
+
+  if (owner.indexOf(username) !== -1) {
+    modifyAnchor.setAttribute('href', '#modify');
+    modifyAnchor.style.fontWeight = 700;
+
+    modifyAnchor.addEventListener('click', () => {
+      const inputModify = document.querySelectorAll('input.modify');
+      const inputCreate = document.querySelectorAll('input.create');
+      const btnModify = document.querySelector('button.modify');
+      const form = document.querySelector('form.modify-form');
+      const h2Modify = document.querySelector('h2.modify');
+      const imgForm = document.querySelectorAll('img.form');
+
+      inputModify[0].removeAttribute('disabled');
+      inputModify[0].value = titleToModify.textContent;
+      inputModify[0].focus();
+      inputModify[1].removeAttribute('disabled');
+      inputModify[1].value = urlToModify.textContent;
+      btnModify.removeAttribute('disabled');
+      h2Modify.textContent = `MODIFY POST ID#${id}`;
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const httpPost = new XMLHttpRequest();
+
+        httpPost.open('PUT', `http://localhost:3000/posts/${id}`, true);
+
+        httpPost.setRequestHeader('Content-Type', 'application/json');
+        httpPost.setRequestHeader('username', `${username}`);
+        httpPost.onload = () => {
+          const response = JSON.parse(httpPost.responseText);
+
+          titleToModify.textContent = response.modified[0].title;
+          urlToModify.textContent = response.modified[0].url;
+          lastModified.textContent = convertUnixTimestampToDateTime(response.modified[0].last_modified);
+
+          inputModify[0].setAttribute('disabled', 'disabled');
+          inputModify[0].value = '';
+          inputModify[1].setAttribute('disabled', 'disabled');
+          inputModify[1].value = '';
+          btnModify.setAttribute('disabled', 'disabled');
+          h2Modify.textContent = `MODIFY POST ID#`;
+
+          inputCreate[0].focus();
+
+          if (response.error) {
+            imgForm[1].setAttribute('src', '/views/red-cross_transparent.png');
+            setTimeout(() => { imgForm[1].setAttribute('src', '/views/empty_transparent.png'); }, 2000);
+          } else {
+            imgForm[0].setAttribute('src', '/views/tick_transparent.png');
+            setTimeout(() => { imgForm[0].setAttribute('src', '/views/empty_transparent.png'); }, 2000);
+          }
+
+        }
+        let body = {
+          "title": `${event.target[0].value}`,
+          "url": `${event.target[1].value}`
+        }
+
+        httpPost.send(JSON.stringify(body));
+      });
+    });
+
+    deleteAnchor.setAttribute('href', '#delete');
+    deleteAnchor.style.fontWeight = 700;
+
+    deleteAnchor.addEventListener('click', () => {
+      const inputCreate = document.querySelectorAll('input.create');
+      const httpPost = new XMLHttpRequest();
+
+      httpPost.open('DELETE', `http://localhost:3000/posts/${id}`, true);
+
+      httpPost.setRequestHeader('username', `${username}`);
+      httpPost.onload = () => {
+        const response = JSON.parse(httpPost.responseText);
+
+        let divPost = document.querySelector(`div.idnr${id}`);
+
+        if (response.error) {
+          alert(response.error);
+        } else {
+          divPost.style.display = 'none';
+          alert(`The post with id#${response.deleted[0].id} was deleted by ${username}!`);
+        }
+
+        inputCreate[0].focus();
+      }
+
+      httpPost.send();
+    });
+  }
+
+  imgUpvote.addEventListener('click', () => {
+    upvoteByUser(id, imgUpvote, imgDownvote, divScore, tempNextPost);
+  });
+
+  imgDownvote.addEventListener('click', () => {
+    downvoteByUser(id, imgUpvote, imgDownvote, divScore, tempNextPost);
+  });
+
+  parent.removeChild(divPost.nextSibling);
+  parent.insertBefore(tempNextPost, divPost);
+}
+
+function divUp(divPost) {
+  let tempPrevPost = divPost.previousSibling.cloneNode(true);
+  let parent = divPost.parentNode;
+
+  let id = tempPrevPost.querySelector('.id').textContent.replace(/[^0-9\.]+/g, '');
+  let imgUpvote = tempPrevPost.querySelector('.upvote');
+  let imgDownvote = tempPrevPost.querySelector('.downvote');
+  let divScore = tempPrevPost.querySelector('.score');
+
+  let owner = tempPrevPost.querySelector('.owner').textContent;
+
+  //code redundancy --> REFACTOR !!! active delete and modify anchor if user=owner
+  const modifyAnchor = tempPrevPost.querySelector('a.modify');
+  const deleteAnchor = tempPrevPost.querySelector('a.delete');
+  const titleToModify = tempPrevPost.querySelector('div.title');
+  const urlToModify = tempPrevPost.querySelector('div.url');
+  const lastModified = tempPrevPost.querySelector('div.last-mod');
+
+  if (owner.indexOf(username) !== -1) {
+    modifyAnchor.setAttribute('href', '#modify');
+    modifyAnchor.style.fontWeight = 700;
+
+    modifyAnchor.addEventListener('click', () => {
+      const inputModify = document.querySelectorAll('input.modify');
+      const inputCreate = document.querySelectorAll('input.create');
+      const btnModify = document.querySelector('button.modify');
+      const form = document.querySelector('form.modify-form');
+      const h2Modify = document.querySelector('h2.modify');
+      const imgForm = document.querySelectorAll('img.form');
+
+      inputModify[0].removeAttribute('disabled');
+      inputModify[0].value = titleToModify.textContent;
+      inputModify[0].focus();
+      inputModify[1].removeAttribute('disabled');
+      inputModify[1].value = urlToModify.textContent;
+      btnModify.removeAttribute('disabled');
+      h2Modify.textContent = `MODIFY POST ID#${id}`;
+
+      form.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const httpPost = new XMLHttpRequest();
+
+        httpPost.open('PUT', `http://localhost:3000/posts/${id}`, true);
+
+        httpPost.setRequestHeader('Content-Type', 'application/json');
+        httpPost.setRequestHeader('username', `${username}`);
+        httpPost.onload = () => {
+          const response = JSON.parse(httpPost.responseText);
+
+          titleToModify.textContent = response.modified[0].title;
+          urlToModify.textContent = response.modified[0].url;
+          lastModified.textContent = convertUnixTimestampToDateTime(response.modified[0].last_modified);
+
+          inputModify[0].setAttribute('disabled', 'disabled');
+          inputModify[0].value = '';
+          inputModify[1].setAttribute('disabled', 'disabled');
+          inputModify[1].value = '';
+          btnModify.setAttribute('disabled', 'disabled');
+          h2Modify.textContent = `MODIFY POST ID#`;
+
+          inputCreate[0].focus();
+
+          if (response.error) {
+            imgForm[1].setAttribute('src', '/views/red-cross_transparent.png');
+            setTimeout(() => { imgForm[1].setAttribute('src', '/views/empty_transparent.png'); }, 2000);
+          } else {
+            imgForm[0].setAttribute('src', '/views/tick_transparent.png');
+            setTimeout(() => { imgForm[0].setAttribute('src', '/views/empty_transparent.png'); }, 2000);
+          }
+
+        }
+        let body = {
+          "title": `${event.target[0].value}`,
+          "url": `${event.target[1].value}`
+        }
+
+        httpPost.send(JSON.stringify(body));
+      });
+    });
+
+    deleteAnchor.setAttribute('href', '#delete');
+    deleteAnchor.style.fontWeight = 700;
+
+    deleteAnchor.addEventListener('click', () => {
+      const inputCreate = document.querySelectorAll('input.create');
+      const httpPost = new XMLHttpRequest();
+
+      httpPost.open('DELETE', `http://localhost:3000/posts/${id}`, true);
+
+      httpPost.setRequestHeader('username', `${username}`);
+      httpPost.onload = () => {
+        const response = JSON.parse(httpPost.responseText);
+
+        let divPost = document.querySelector(`div.idnr${id}`);
+
+        if (response.error) {
+          alert(response.error);
+        } else {
+          divPost.style.display = 'none';
+          alert(`The post with id#${response.deleted[0].id} was deleted by ${username}!`);
+        }
+
+        inputCreate[0].focus();
+      }
+
+      httpPost.send();
+    });
+  }
+
+  imgUpvote.addEventListener('click', () => {
+    upvoteByUser(id, imgUpvote, imgDownvote, divScore, tempPrevPost);
+  });
+
+  imgDownvote.addEventListener('click', () => {
+    downvoteByUser(id, imgUpvote, imgDownvote, divScore, tempPrevPost);
+  });
+
+  parent.removeChild(divPost.previousSibling);
+  parent.insertBefore(tempPrevPost, divPost.nextSibling);
 }
 
 function activeCreatePostWindow(user) {
@@ -402,6 +693,119 @@ function activeCreatePostWindow(user) {
         const content = document.querySelector('div.content_div');
 
         createOnePost(response, content, 0);
+
+        const posts = document.querySelectorAll('div.post');
+        const post = posts[posts.length - 1];
+
+        let wasExchange;
+        let score = parseInt(post.children[0].children[1].children[1].innerText);
+        do {
+          wasExchange = false;
+          if (post.previousSibling) {
+            let prevScore = parseInt(post.previousSibling.children[0].children[1].children[1].innerText);
+
+            if (score > prevScore) {
+              divUp(post);
+              wasExchange = true;
+            }
+          }
+        } while (wasExchange);
+
+        const modifyAnchor = post.querySelector('a.modify');
+        const deleteAnchor = post.querySelector('a.delete');
+        const titleToModify = post.querySelector('div.title');
+        const urlToModify = post.querySelector('div.url');
+        const lastModified = post.querySelector('div.last-mod');
+
+        modifyAnchor.setAttribute('href', '#modify');
+        modifyAnchor.style.fontWeight = 700;
+
+        modifyAnchor.addEventListener('click', () => {
+          const inputModify = document.querySelectorAll('input.modify');
+          const inputCreate = document.querySelectorAll('input.create');
+          const btnModify = document.querySelector('button.modify');
+          const form = document.querySelector('form.modify-form');
+          const h2Modify = document.querySelector('h2.modify');
+          const imgForm = document.querySelectorAll('img.form');
+
+          inputModify[0].removeAttribute('disabled');
+          inputModify[0].value = titleToModify.textContent;
+          inputModify[0].focus();
+          inputModify[1].removeAttribute('disabled');
+          inputModify[1].value = urlToModify.textContent;
+          btnModify.removeAttribute('disabled');
+          h2Modify.textContent = `MODIFY POST ID#${response.posts[0].id}`;
+
+          form.addEventListener('submit', (event) => {
+            event.preventDefault();
+
+            const httpPost = new XMLHttpRequest();
+
+            httpPost.open('PUT', `http://localhost:3000/posts/${response.posts[0].id}`, true);
+
+            httpPost.setRequestHeader('Content-Type', 'application/json');
+            httpPost.setRequestHeader('username', `${username}`);
+            httpPost.onload = () => {
+              const response = JSON.parse(httpPost.responseText);
+
+              titleToModify.textContent = response.modified[0].title;
+              urlToModify.textContent = response.modified[0].url;
+              lastModified.textContent = convertUnixTimestampToDateTime(response.modified[0].last_modified);
+
+              inputModify[0].setAttribute('disabled', 'disabled');
+              inputModify[0].value = '';
+              inputModify[1].setAttribute('disabled', 'disabled');
+              inputModify[1].value = '';
+              btnModify.setAttribute('disabled', 'disabled');
+              h2Modify.textContent = `MODIFY POST ID#`;
+
+              inputCreate[0].focus();
+
+              if (response.error) {
+                imgForm[1].setAttribute('src', '/views/red-cross_transparent.png');
+                setTimeout(() => { imgForm[1].setAttribute('src', '/views/empty_transparent.png'); }, 2000);
+              } else {
+                imgForm[0].setAttribute('src', '/views/tick_transparent.png');
+                setTimeout(() => { imgForm[0].setAttribute('src', '/views/empty_transparent.png'); }, 2000);
+              }
+
+            }
+            let body = {
+              "title": `${event.target[0].value}`,
+              "url": `${event.target[1].value}`
+            }
+
+            httpPost.send(JSON.stringify(body));
+          });
+        });
+
+        deleteAnchor.setAttribute('href', '#delete');
+        deleteAnchor.style.fontWeight = 700;
+
+        deleteAnchor.addEventListener('click', () => {
+          const inputCreate = document.querySelectorAll('input.create');
+          const httpPost = new XMLHttpRequest();
+
+          httpPost.open('DELETE', `http://localhost:3000/posts/${response.posts[0].id}`, true);
+
+          httpPost.setRequestHeader('username', `${username}`);
+          httpPost.onload = () => {
+            const response = JSON.parse(httpPost.responseText);
+
+            let divPost = document.querySelector(`div.idnr${id}`);
+
+            if (response.error) {
+              alert(response.error);
+            } else {
+              divPost.style.display = 'none';
+              alert(`The post with id#${response.deleted[0].id} was deleted by ${username}!`);
+            }
+
+            inputCreate[0].focus();
+          }
+
+          httpPost.send();
+        });
 
         imgForm[0].setAttribute('src', '/views/tick_transparent.png');
         setTimeout(() => { imgForm[0].setAttribute('src', '/views/empty_transparent.png'); }, 2000);
